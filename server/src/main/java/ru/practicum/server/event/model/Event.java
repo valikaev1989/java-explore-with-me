@@ -46,8 +46,9 @@ public class Event {
     @Column(name = "paid", nullable = false)
     private Boolean paid;
     @Column(name = "participant_limit")
-    @ColumnDefault("0")
-    private Integer participantLimit;
+    private Integer participantLimit = 0;
+    @Column(name = "confirmed_request")
+    private Integer confirmedRequest = 0;
     @Column(name = "published_on", nullable = false)
     private LocalDateTime publishedOn;
     @Column(name = "request moderation", nullable = false)

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.server.location.models.LocationDtos.LocationInputDto;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -17,6 +18,7 @@ public class EventInputDto {
     @NotBlank
     private String annotation;
     @NotNull
+    @Min(0)
     private Long categoryId;
     @NotBlank
     private String description;
@@ -27,6 +29,7 @@ public class EventInputDto {
     @NotNull
     private Boolean paid;
     @NotNull
+    @Min(0)
     private Integer participantLimit;
     @NotNull
     private Boolean requestModeration;
@@ -35,3 +38,11 @@ public class EventInputDto {
     @NotBlank
     private String state;
 }
+// string text
+//list categoties
+//boolean paid
+//string rangestart
+//string rangeend
+//boolean onlyAvailable
+//sort eventdate views
+//page
