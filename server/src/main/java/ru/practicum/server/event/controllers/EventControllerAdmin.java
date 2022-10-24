@@ -19,16 +19,17 @@ public class EventControllerAdmin {
     private final EventService eventService;
 
     @GetMapping()
-    List<EventFullDto> getEventsByFilter(@RequestParam(required = false) List<Long> userIds,
-                                         @RequestParam(required = false) List<EventState> eventStates,
-                                         @RequestParam(required = false) List<Long> categoryIds,
-                                         @RequestParam(required = false) String rangeStart,
-                                         @RequestParam(required = false) String rangeEnd,
-                                         @RequestParam(required = false, defaultValue = "0") @Min(0) Integer from,
-                                         @RequestParam(required = false, defaultValue = "10") @Min(0) Integer size) {
+    List<EventFullDto> getEventsByFilter(
+            @RequestParam(value = "users", required = false, defaultValue = "List.of()") List<Long> userIds,
+            @RequestParam(value = "states", required = false, defaultValue = "List.of()") List<String> states,
+            @RequestParam(value = "categories", required = false, defaultValue = "List.of()") List<Long> categoryIds,
+            @RequestParam(value = "rangeStart", required = false) String rangeStart,
+            @RequestParam(value = "rangeEnd", required = false) String rangeEnd,
+            @RequestParam(value = "from", required = false, defaultValue = "0") @Min(0) Integer from,
+            @RequestParam(value = "size", required = false, defaultValue = "10") @Min(0) Integer size) {
         Map<String, Object> filter = Map.of(
                 "users", userIds,
-                "states", eventStates,
+                "states", states,
                 "categories", categoryIds,
                 "rangeStart", rangeStart,
                 "rangeEnd", rangeEnd,
@@ -36,14 +37,14 @@ public class EventControllerAdmin {
                 "size", size);
         log.info("EventControllerAdmin.getEventsByFilter:filter:");
         filter.forEach((key, value) -> log.info("{}:{}", key, value));
-        return eventService.getEventByFilter(filter);
+        return eventService.getEventsByFilterForAdmin(filter);
     }
 
     @PutMapping("/{eventId}")
-    EventFullDto updateEvent(@PathVariable(value = "eventId") @Min(0) Long eventId,
-                             @RequestBody EventInputDto eventInputDto) {
+    EventFullDto updateEventFromAdmin(@PathVariable(value = "eventId") @Min(0) Long eventId,
+                                      @RequestBody EventInputDto eventInputDto) {
         log.info("EventControllerAdmin.updateEvent: eventId{}, eventInputDto{}", eventId, eventInputDto);
-        return eventService.updateEvent(eventId, eventInputDto);
+        return eventService.updateEventFromAdmin(eventId, eventInputDto);
     }
 
     @PatchMapping("/{eventId}/publish")

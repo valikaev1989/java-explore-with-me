@@ -15,10 +15,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventInputDto {
+    private Long eventId;
     @NotBlank
     private String annotation;
-    @NotNull
-    @Min(0)
     private Long categoryId;
     @NotBlank
     private String description;

@@ -25,12 +25,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserOutputDto> getAllUsers(List<Long> ids, Pageable page) {
         log.info("UserService.getAllUsers start: ids:{}, page: {}.", ids, page);
-        List<UserOutputDto> userOutputDtoList;
-        if (ids != null || !ids.isEmpty()) {
-            userOutputDtoList = UserMapper.toDtoUsers(userRepository.findAll(page));
-        } else {
-            userOutputDtoList = UserMapper.toDtoUsers(userRepository.findUserByUserIdIn(getCorrectIdList(ids), page));
-        }
+        List<UserOutputDto> userOutputDtoList = checkListUserIds(ids, page);
         log.info("UserService.getAllUsers end: userOutputDtoList:{}.", userOutputDtoList);
         return userOutputDtoList;
     }
@@ -51,16 +46,12 @@ public class UserServiceImpl implements UserService {
         log.info("UserService.deleteUser end userId:{}.", userId);
     }
 
-    private List<Long> getCorrectIdList(List<Long> ids) {
-        List<Long> correct = new ArrayList<>();
-        for (Long id : ids) {
-            try {
-                User user = validation.validateAndReturnUserByUserId(id);
-                correct.add(user.getUserId());
-            } catch (NotFoundException ex) {
-                log.warn(ex.getMessage());
-            }
+    private List<UserOutputDto> checkListUserIds(List<Long> ids, Pageable pageable) {
+        if (ids != null || !ids.isEmpty()) {
+            return UserMapper.toDtoUsers(userRepository.findAll(pageable));
+        } else {
+            return UserMapper.toDtoUsers(
+                    userRepository.findUserByUserIdIn(validation.getCorrectUserIdList(ids), pageable));
         }
-        return correct;
     }
 }

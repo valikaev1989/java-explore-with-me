@@ -44,7 +44,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(ConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse badRequest(ConflictException e) {
+    public ErrorResponse conflict(ConflictException e) {
         return ErrorResponse.builder()
                 .errors(Arrays.asList(e.getStackTrace()))
                 .message(e.getLocalizedMessage())
@@ -56,7 +56,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(AccessException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse badRequest(AccessException e) {
+    public ErrorResponse access(AccessException e) {
         return ErrorResponse.builder()
                 .errors(Arrays.asList(e.getStackTrace()))
                 .message(e.getLocalizedMessage())
@@ -68,7 +68,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse badRequest(Throwable e) {
+    public ErrorResponse internal(Throwable e) {
         return ErrorResponse.builder()
                 .errors(Arrays.asList(e.getStackTrace()))
                 .message(e.getLocalizedMessage())

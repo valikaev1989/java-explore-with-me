@@ -3,6 +3,7 @@ package ru.practicum.server.category.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 import ru.practicum.server.category.model.categoryDtos.CategoryMapper;
 import ru.practicum.server.category.model.categoryDtos.CategoryDto;
 import ru.practicum.server.category.repositories.CategoryRepository;
@@ -11,6 +12,7 @@ import ru.practicum.server.utils.Validation;
 import java.util.List;
 
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;

@@ -19,8 +19,8 @@ public class CategoryControllerPublic {
 
     @GetMapping()
     public List<CategoryDto> getAllCategory(
-            @RequestParam(required = false, defaultValue = "0") @Min(0) Integer from,
-            @RequestParam(required = false, defaultValue = "10") @Min(0) Integer size) {
+            @RequestParam(value = "from", required = false, defaultValue = "0") @Min(0) Integer from,
+            @RequestParam(value = "size", required = false, defaultValue = "10") @Min(0) Integer size) {
         log.info("CategoryControllerPublic.getAllCategory from={}, size={}", from, size);
         return categoryService.getAllCategories(FormatPage.getPage(from, size));
     }

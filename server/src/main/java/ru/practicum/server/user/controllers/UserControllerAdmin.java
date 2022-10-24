@@ -22,8 +22,8 @@ public class UserControllerAdmin {
     @GetMapping
     public List<UserOutputDto> getUsersFromListIds(
             @RequestParam(required = false) List<Long> ids,
-            @RequestParam(required = false, defaultValue = "0") @Min(0) Integer from,
-            @RequestParam(required = false, defaultValue = "10") @Min(0) Integer size) {
+            @RequestParam(value = "from", required = false, defaultValue = "0") @Min(0) Integer from,
+            @RequestParam(value = "size", required = false, defaultValue = "10") @Min(0) Integer size) {
         log.info("UserController.getUsersFromListIds:\nids:{}\nfrom{},size{}", ids, from, size);
         return userService.getAllUsers(ids, FormatPage.getPage(from, size));
     }
