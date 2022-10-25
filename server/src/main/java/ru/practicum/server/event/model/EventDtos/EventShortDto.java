@@ -12,7 +12,7 @@ import ru.practicum.server.user.models.userDtos.UserOutputDto;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventShortDto {
-    private Long eventId;
+    private Long id;
     private String annotation;
     private CategoryDto category;
     private Integer confirmedRequests;

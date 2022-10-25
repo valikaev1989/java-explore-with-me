@@ -22,7 +22,7 @@ public class UserMapper {
             return null;
         }
         return UserOutputDto.builder()
-                .userId(user.getUserId())
+                .id(user.getUserId())
                 .name(user.getName())
                 .email(user.getEmail())
                 .build();

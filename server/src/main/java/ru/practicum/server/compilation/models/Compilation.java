@@ -25,11 +25,10 @@ public class Compilation {
     @Column(name = "Compilation_title")
     @NotBlank
     private String title;
-//    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-//    @ToString.Exclude
-//    @JoinTable(
-//            name = "event_compilations",
-//            joinColumns = @JoinColumn(name = "compilation_id"),
-//            inverseJoinColumns = @JoinColumn(name = "event_id"))
-//    Set<Event> eventSet = new HashSet<>();
+    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "event_compilations",
+            joinColumns = @JoinColumn(name = "compilation_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id"))
+    Set<Event> eventSet = new HashSet<>();
 }

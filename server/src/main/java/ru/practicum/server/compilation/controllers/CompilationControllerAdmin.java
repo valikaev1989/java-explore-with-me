@@ -8,6 +8,7 @@ import ru.practicum.server.compilation.models.compilationDto.CompilationOutputDt
 import ru.practicum.server.compilation.services.CompilationService;
 
 @Slf4j
+@RestController
 @RequestMapping("/admin/compilations")
 @RequiredArgsConstructor
 public class CompilationControllerAdmin {

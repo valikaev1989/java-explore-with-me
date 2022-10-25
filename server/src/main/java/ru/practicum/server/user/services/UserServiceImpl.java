@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private List<UserOutputDto> checkListUserIds(List<Long> ids, Pageable pageable) {
-        if (ids != null || !ids.isEmpty()) {
+        if (ids.isEmpty()) {
             return UserMapper.toDtoUsers(userRepository.findAll(pageable));
         } else {
             return UserMapper.toDtoUsers(

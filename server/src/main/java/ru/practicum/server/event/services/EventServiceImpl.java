@@ -88,9 +88,12 @@ public class EventServiceImpl implements EventService {
         validation.validateEventDateAddEvent(LocalDateTime.parse(eventInputDto.getEventDate(), FORMATTER));
         Event event = EventMapper.toEvent(
                 validation.validateAndReturnUserByUserId(userId),
-                validation.validateAndReturnCategoryByCategoryId(eventInputDto.getCategoryId()),
+                validation.validateAndReturnCategoryByCategoryId(eventInputDto.getCategory()),
                 LocationMapper.toLocation(locationService.addLocation(eventInputDto.getLocation())),
                 eventInputDto);
+        System.out.println("");
+        System.out.println(event);
+        System.out.println("");
         EventFullDto eventFullDto = EventMapper.ToFullDto(eventRepository.save(event));
         log.info("EventServiceImpl.addEvent end: eventFullDto{}", eventFullDto);
         return eventFullDto;
@@ -109,7 +112,7 @@ public class EventServiceImpl implements EventService {
     public EventFullDto updateEventFromInitiator(Long userId, EventInputDto eventInputDto) {
         log.info("EventServiceImpl.updateEventFromInitiator start: userId:{}, eventInputDto:{}", userId, eventInputDto);
         validation.validateAndReturnUserByUserId(userId);
-        Event event = validation.validateAndReturnEventByEventId(eventInputDto.getEventId());
+        Event event = validation.validateAndReturnEventByEventId(eventInputDto.getId());
         validation.validateForInitiatorEvent(userId, event);
         validation.validateForStatusPublished(eventInputDto);
         EventFullDto eventFullDto = EventMapper.ToFullDto(prepareForUpdateEvent(event, eventInputDto));
@@ -175,8 +178,8 @@ public class EventServiceImpl implements EventService {
     private Event prepareForUpdateEvent(Event event, EventInputDto eventInputDto) {
         LocalDateTime eventDate = validation.validateEventDateAddEvent(
                 LocalDateTime.parse(eventInputDto.getEventDate(), FORMATTER));
-        if (eventInputDto.getCategoryId() != null) {
-            event.setCategory(validation.validateAndReturnCategoryByCategoryId(eventInputDto.getCategoryId()));
+        if (eventInputDto.getCategory() != null) {
+            event.setCategory(validation.validateAndReturnCategoryByCategoryId(eventInputDto.getCategory()));
         }
         if (eventInputDto.getLocation() != null) {
             event.getLocation().setLat(eventInputDto.getLocation().getLat());
@@ -224,7 +227,7 @@ public class EventServiceImpl implements EventService {
     private List<EventShortDto> getSortPublicEvents(List<Event> events, Boolean onlyAvailable, String sort) {
         if (onlyAvailable) {
             return events.stream()
-                    .filter(event -> event.getParticipantLimit() > event.getConfirmedRequest())
+                    .filter(event -> event.getParticipantLimit() > event.getConfirmedRequests())
                     .sorted(getComparatorForPublicList(sort))
                     .map(EventMapper::toShortDto)
                     .collect(Collectors.toList());

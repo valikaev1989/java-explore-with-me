@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CompilationOutputDto {
-    private Long compilationId;
+    private Long id;
     private boolean pinned;
     private String title;
     private List<EventShortDto> events;

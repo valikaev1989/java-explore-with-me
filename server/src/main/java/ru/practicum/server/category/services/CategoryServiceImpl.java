@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.practicum.server.category.model.Category;
 import ru.practicum.server.category.model.categoryDtos.CategoryMapper;
 import ru.practicum.server.category.model.categoryDtos.CategoryDto;
 import ru.practicum.server.category.repositories.CategoryRepository;
@@ -29,7 +30,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto addCategory(CategoryDto categoryDto) {
         log.info("CategoryService.addCategory start categoryDto:{}", categoryDto);
-        CategoryDto categoryDtoResult = getResultForAddAndUpdate(categoryDto);
+        CategoryDto categoryDtoResult = CategoryMapper.toCategoryDto(
+                categoryRepository.save(CategoryMapper.toCategory(categoryDto)));
         log.info("CategoryService.addCategory end categoryDtoResult:{}", categoryDtoResult);
         return categoryDtoResult;
     }
@@ -37,7 +39,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto updateCategory(CategoryDto categoryDto) {
         log.info("CategoryService.updateCategory start categoryDto:{}", categoryDto);
-        CategoryDto categoryDtoResult = getResultForAddAndUpdate(categoryDto);
+        Category category = validation.validateAndReturnCategoryByCategoryId(categoryDto.getId());
+        category.setName(categoryDto.getName());
+        CategoryDto categoryDtoResult = CategoryMapper.toCategoryDto(categoryRepository.save(category));
         log.info("CategoryService.updateCategory end categoryDtoResult:{}", categoryDtoResult);
         return categoryDtoResult;
     }
@@ -57,10 +61,5 @@ public class CategoryServiceImpl implements CategoryService {
         validation.validateAndReturnCategoryByCategoryId(categoryId);
         categoryRepository.deleteById(categoryId);
         log.info("CategoryService.deleteCategoryById end categoryId:{}", categoryId);
-    }
-
-    private CategoryDto getResultForAddAndUpdate(CategoryDto categoryDto) {
-        return CategoryMapper.toCategoryDto(
-                categoryRepository.save(CategoryMapper.toCategory(categoryDto)));
     }
 }

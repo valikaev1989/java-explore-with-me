@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
 @Slf4j
+@RestController
 @RequestMapping("/admin/categories")
 @RequiredArgsConstructor
 public class CategoryControllerAdmin {
@@ -17,18 +18,21 @@ public class CategoryControllerAdmin {
 
     @PostMapping()
     public CategoryDto addCategory(@RequestBody @Valid CategoryDto categoryDto) {
+        System.out.println("");
         log.info("CategoryControllerAdmin.addCategory: categoryDto{}", categoryDto);
         return categoryService.addCategory(categoryDto);
     }
 
     @PatchMapping
     public CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
+        System.out.println("");
         log.info("CategoryControllerAdmin.addCategory: categoryDto{}", categoryDto);
         return categoryService.updateCategory(categoryDto);
     }
 
     @DeleteMapping("/{catId}")
     public void deleteCategoryById(@PathVariable @Min(0) Long catId) {
+        System.out.println("");
         log.info("CategoryControllerAdmin.deleteCategoryById: catId{}", catId);
         categoryService.deleteCategoryById(catId);
     }

@@ -2,20 +2,17 @@ package ru.practicum.server.event.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.server.event.model.EventDtos.EventFullDto;
 import ru.practicum.server.event.model.EventDtos.EventShortDto;
 import ru.practicum.server.event.services.EventService;
 
 import javax.validation.constraints.Min;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@RestController
 @RequestMapping("/events")
 @RequiredArgsConstructor
 public class EventControllerPublic {
@@ -43,6 +40,7 @@ public class EventControllerPublic {
                 "from", from,
                 "size", size
         );
+        System.out.println("");
         log.info("EventControllerPublic.getAllEventForPublic filter:");
         filter.forEach((key, value) -> log.info("{}: {}", key, value));
         return eventService.getAllEventsForPublic(filter);
@@ -50,6 +48,7 @@ public class EventControllerPublic {
 
     @GetMapping("/{eventId}")
     public EventFullDto getEventByIdForPublic(@PathVariable(value = "eventId") @Min(0) Long eventId) {
+        System.out.println("");
         log.info("EventControllerPublic.getEventByIdForPublic: eventId:{}", eventId);
         return eventService.getEventByIdForPublic(eventId);
     }

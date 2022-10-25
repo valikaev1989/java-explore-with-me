@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.server.event.model.EventDtos.EventFullDto;
 import ru.practicum.server.event.model.EventDtos.EventInputDto;
-import ru.practicum.server.event.model.EventState;
 import ru.practicum.server.event.services.EventService;
 
 import javax.validation.constraints.Min;
@@ -13,13 +12,14 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@RestController
 @RequestMapping("/admin/events")
 @RequiredArgsConstructor
 public class EventControllerAdmin {
     private final EventService eventService;
 
     @GetMapping()
-    List<EventFullDto> getEventsByFilter(
+    public List<EventFullDto> getEventsByFilter(
             @RequestParam(value = "users", required = false, defaultValue = "List.of()") List<Long> userIds,
             @RequestParam(value = "states", required = false, defaultValue = "List.of()") List<String> states,
             @RequestParam(value = "categories", required = false, defaultValue = "List.of()") List<Long> categoryIds,
@@ -35,26 +35,30 @@ public class EventControllerAdmin {
                 "rangeEnd", rangeEnd,
                 "from", from,
                 "size", size);
+        System.out.println("");
         log.info("EventControllerAdmin.getEventsByFilter:filter:");
         filter.forEach((key, value) -> log.info("{}:{}", key, value));
         return eventService.getEventsByFilterForAdmin(filter);
     }
 
     @PutMapping("/{eventId}")
-    EventFullDto updateEventFromAdmin(@PathVariable(value = "eventId") @Min(0) Long eventId,
-                                      @RequestBody EventInputDto eventInputDto) {
+    public EventFullDto updateEventFromAdmin(@PathVariable(value = "eventId") @Min(0) Long eventId,
+                                             @RequestBody EventInputDto eventInputDto) {
+        System.out.println("");
         log.info("EventControllerAdmin.updateEvent: eventId{}, eventInputDto{}", eventId, eventInputDto);
         return eventService.updateEventFromAdmin(eventId, eventInputDto);
     }
 
     @PatchMapping("/{eventId}/publish")
-    EventFullDto publishEvent(@PathVariable(value = "eventId") @Min(0) Long eventId) {
+    public EventFullDto publishEvent(@PathVariable(value = "eventId") @Min(0) Long eventId) {
+        System.out.println("");
         log.info("EventControllerAdmin.publishEvent: eventId:{}", eventId);
         return eventService.publishEvent(eventId);
     }
 
     @PatchMapping("/{eventId}/reject")
-    EventFullDto rejectEvent(@PathVariable(value = "eventId") @Min(0) Long eventId) {
+    public EventFullDto rejectEvent(@PathVariable(value = "eventId") @Min(0) Long eventId) {
+        System.out.println("");
         log.info("EventControllerAdmin.rejectEvent: eventId:{}", eventId);
         return eventService.rejectEvent(eventId);
     }

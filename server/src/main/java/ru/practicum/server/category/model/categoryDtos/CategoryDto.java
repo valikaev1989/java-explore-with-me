@@ -12,7 +12,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryDto {
-    private Long categoryId;
+    private Long id;
     @NotBlank
     private String name;
 }

@@ -84,7 +84,7 @@ public class Validation {
     public void validateForStatusPublished(EventInputDto event) {
         if (EventState.valueOf(event.getState()).equals(EventState.PUBLISHED)) {
             throw new AccessException(String.format(
-                    "Событие с eventId '%d' опубликовано, редактирование запрещено", event.getEventId()));
+                    "Событие с eventId '%d' опубликовано, редактирование запрещено", event.getId()));
         }
     }
 

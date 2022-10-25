@@ -15,10 +15,10 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventInputDto {
-    private Long eventId;
+    private Long id;
     @NotBlank
     private String annotation;
-    private Long categoryId;
+    private Long category;
     @NotBlank
     private String description;
     @NotBlank
@@ -34,14 +34,5 @@ public class EventInputDto {
     private Boolean requestModeration;
     @NotBlank
     private String title;
-    @NotBlank
     private String state;
 }
-// string text
-//list categoties
-//boolean paid
-//string rangestart
-//string rangeend
-//boolean onlyAvailable
-//sort eventdate views
-//page

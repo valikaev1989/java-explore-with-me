@@ -21,6 +21,9 @@ import static ru.practicum.server.utils.FormatDate.FORMATTER;
 public class EventMapper {
 
     public static Event toEvent(User user, Category category, Location location, EventInputDto eventInputDto) {
+        if (eventInputDto.getState() == null) {
+            eventInputDto.setState(EventState.PENDING.toString());
+        }
         return Event.builder()
                 .annotation(eventInputDto.getAnnotation())
                 .category(category)
@@ -28,7 +31,7 @@ public class EventMapper {
                 .description(eventInputDto.getDescription())
                 .eventDate(LocalDateTime.parse(eventInputDto.getEventDate(), FORMATTER))
                 .initiator(user)
-                .confirmedRequest(0)
+                .confirmedRequests(0)
                 .location(location)
                 .paid(eventInputDto.getPaid())
                 .participantLimit(eventInputDto.getParticipantLimit())
@@ -39,8 +42,8 @@ public class EventMapper {
     }
 
     public static EventFullDto ToFullDto(Event event) {
-        return EventFullDto.builder()
-                .eventId(event.getEventId())
+        EventFullDto eventFullDto = EventFullDto.builder()
+                .id(event.getEventId())
                 .annotation(event.getAnnotation())
                 .category(CategoryMapper.toCategoryDto(event.getCategory()))
                 .createdOn(event.getCreatedOn().format(FORMATTER))
@@ -50,21 +53,24 @@ public class EventMapper {
                 .location(LocationMapper.locationDto(event.getLocation()))
                 .paid(event.getPaid())
                 .participantLimit(event.getParticipantLimit())
-                .confirmedRequest(event.getConfirmedRequest())
-                .publishedOn(event.getPublishedOn().format(FORMATTER))
+                .confirmedRequests(event.getConfirmedRequests())
                 .requestModeration(event.getRequestModeration())
                 .state(event.getState())
                 .title(event.getTitle())
                 .views(0)
                 .build();
+        if (event.getPublishedOn() != null) {
+            eventFullDto.setPublishedOn(event.getPublishedOn().format(FORMATTER));
+        }
+        return eventFullDto;
     }
 
     public static EventShortDto toShortDto(Event event) {
         return EventShortDto.builder()
-                .eventId(event.getEventId())
+                .id(event.getEventId())
                 .annotation(event.getAnnotation())
                 .category(CategoryMapper.toCategoryDto(event.getCategory()))
-                .confirmedRequests(event.getConfirmedRequest())
+                .confirmedRequests(event.getConfirmedRequests())
                 .eventDate(event.getEventDate().format(FORMATTER))
                 .initiator(UserMapper.toDto(event.getInitiator()))
                 .paid(event.getPaid())

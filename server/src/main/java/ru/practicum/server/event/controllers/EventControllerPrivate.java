@@ -13,6 +13,7 @@ import javax.validation.constraints.Min;
 import java.util.List;
 
 @Slf4j
+@RestController
 @RequestMapping("/users/{userId}/events")
 @RequiredArgsConstructor
 public class EventControllerPrivate {
@@ -23,13 +24,15 @@ public class EventControllerPrivate {
             @PathVariable(value = "userId") @Min(0) Long userId,
             @RequestParam(value = "from", required = false, defaultValue = "0") @Min(0) Integer from,
             @RequestParam(value = "size", required = false, defaultValue = "10") @Min(0) Integer size) {
+        System.out.println("");
         log.info("EventControllerPrivate.getAllEventsByUserId: userId:{}, from:{}, size:{}", userId, from, size);
         return eventService.getAllEventsByInitiatorId(userId, FormatPage.getPage(from, size));
     }
 
     @PostMapping
     public EventFullDto addEvent(@PathVariable(value = "userId") Long userId,
-                                 @RequestBody @Valid EventInputDto eventInputDto) {
+                                 @RequestBody EventInputDto eventInputDto) {
+        System.out.println("");
         log.info("EventControllerPrivate.addEvent: addEvent:{},eventInputDto:{}", userId, eventInputDto);
         return eventService.addEvent(userId, eventInputDto);
     }
@@ -38,6 +41,7 @@ public class EventControllerPrivate {
     @PatchMapping
     public EventFullDto updateEventFromInitiator(@PathVariable(value = "userId") @Min(0) Long userId,
                                                  @RequestBody @Valid EventInputDto eventInputDto) {
+        System.out.println("");
         log.info("EventControllerPrivate.updateEventFromInitiator: userId{}, eventInputDto{}", userId, eventInputDto);
         return eventService.updateEventFromInitiator(userId, eventInputDto);
     }
@@ -45,6 +49,7 @@ public class EventControllerPrivate {
     @GetMapping("/events/{eventId}")
     public EventFullDto getEventByInitiatorId(@PathVariable(value = "userId") @Min(0) Long userId,
                                               @PathVariable(value = "eventId") @Min(0) Long eventId) {
+        System.out.println("");
         log.info("EventControllerPrivate.getEventByInitiatorId: userId:{}, eventId:{}", userId, eventId);
         return eventService.getEventByInitiatorId(userId, eventId);
     }
@@ -52,6 +57,7 @@ public class EventControllerPrivate {
     @PatchMapping("/events/{eventId}")
     public EventFullDto cancelEvent(@PathVariable(value = "userId") @Min(0) Long userId,
                                     @PathVariable(value = "eventId") @Min(0) Long eventId) {
+        System.out.println("");
         log.info("EventControllerPrivate.cancelEvent: userId:{}, eventId:{}", userId, eventId);
         return eventService.cancelEvent(userId, eventId);
     }

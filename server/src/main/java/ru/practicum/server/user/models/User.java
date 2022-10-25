@@ -16,14 +16,14 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     private Long userId;
 
     @Column(name = "users_name", length = 50)
     @NotBlank
     private String name;
 
-    @Column(name = "users_email", unique = true, length = 50)
+    @Column(name = "users_email", length = 50)
     @Email
     @NotBlank
     private String email;

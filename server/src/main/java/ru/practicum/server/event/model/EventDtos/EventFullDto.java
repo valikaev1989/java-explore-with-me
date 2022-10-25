@@ -15,7 +15,7 @@ import ru.practicum.server.user.models.userDtos.UserOutputDto;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventFullDto {
-    private Long eventId;
+    private Long id;
     private String annotation;
     private CategoryDto category;
     private String createdOn;
@@ -25,7 +25,7 @@ public class EventFullDto {
     private LocationDto location;
     private Boolean paid;
     private Integer participantLimit;
-    private Integer confirmedRequest;
+    private Integer confirmedRequests;
     private String publishedOn;
     private Boolean requestModeration;
     private EventState state;
