@@ -4,7 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.practicum.server.event.model.Event;
-import ru.practicum.server.event.model.EventState;
+import ru.practicum.server.utils.State;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,7 +25,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "and e.eventDate between ?4 and ?5 " +
             "order by e.eventDate DESC")
     List<Event> getAllEventsByParametersForAdmin(List<Long> userIds, List<Long> categoriesIds,
-                                                 List<EventState> stateList, LocalDateTime rangeStart,
+                                                 List<State> stateList, LocalDateTime rangeStart,
                                                  LocalDateTime rangeEnd, Pageable pageable);
 
     /**
@@ -40,6 +40,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "and e.paid = ?4 " +
             "and e.eventDate between ?5 and ?6")
     List<Event> getAllEventsByParametersForPublic(
-            EventState state, List<Long> categoriesIds, String text, Boolean paid,
+            State state, List<Long> categoriesIds, String text, Boolean paid,
             LocalDateTime rangeStart, LocalDateTime rangeEnd, Pageable pageable);
 }

@@ -6,11 +6,12 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.server.user.models.userDtos.UserInputDto;
 import ru.practicum.server.user.models.userDtos.UserOutputDto;
 import ru.practicum.server.user.services.UserService;
-import ru.practicum.server.utils.FormatPage;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
+
+import static ru.practicum.server.utils.FormatPage.getPage;
 
 @Slf4j
 @RestController
@@ -26,7 +27,7 @@ public class UserControllerAdmin {
             @RequestParam(value = "size", required = false, defaultValue = "10") @Min(0) Integer size) {
         System.out.println("");
         log.info("UserController.getUsersFromListIds:\nids:{}\nfrom{},size{}", ids, from, size);
-        return userService.getAllUsers(ids, FormatPage.getPage(from, size));
+        return userService.getAllUsers(ids, getPage(from, size));
     }
 
     @PostMapping

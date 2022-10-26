@@ -4,11 +4,11 @@ import lombok.RequiredArgsConstructor;
 import ru.practicum.server.category.model.Category;
 import ru.practicum.server.category.model.categoryDtos.CategoryMapper;
 import ru.practicum.server.event.model.Event;
-import ru.practicum.server.event.model.EventState;
 import ru.practicum.server.location.models.Location;
 import ru.practicum.server.location.models.LocationDtos.LocationMapper;
 import ru.practicum.server.user.models.User;
 import ru.practicum.server.user.models.userDtos.UserMapper;
+import ru.practicum.server.utils.State;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +22,7 @@ public class EventMapper {
 
     public static Event toEvent(User user, Category category, Location location, EventInputDto eventInputDto) {
         if (eventInputDto.getState() == null) {
-            eventInputDto.setState(EventState.PENDING.toString());
+            eventInputDto.setState(State.PENDING.toString());
         }
         return Event.builder()
                 .annotation(eventInputDto.getAnnotation())
@@ -37,7 +37,7 @@ public class EventMapper {
                 .participantLimit(eventInputDto.getParticipantLimit())
                 .requestModeration(eventInputDto.getRequestModeration())
                 .title(eventInputDto.getTitle())
-                .state(EventState.valueOf(eventInputDto.getState()))
+                .state(State.valueOf(eventInputDto.getState()))
                 .build();
     }
 

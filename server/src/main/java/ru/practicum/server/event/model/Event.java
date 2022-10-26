@@ -4,10 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 import ru.practicum.server.category.model.Category;
 import ru.practicum.server.location.models.Location;
 import ru.practicum.server.user.models.User;
+import ru.practicum.server.utils.State;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -30,12 +30,12 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "category_category_id")
     private Category category;
-    @Column(name = "createdOn", nullable = false)
+    @Column(name = "created_on", nullable = false)
     private LocalDateTime createdOn;
     @NotBlank
     @Column(name = "description",length = 5000)
     private String description;
-    @Column(name = "eventDate", nullable = false)
+    @Column(name = "event_date", nullable = false)
     private LocalDateTime eventDate;
     @ManyToOne
     @JoinColumn(name = "initiator_user_id")
@@ -51,10 +51,10 @@ public class Event {
     private Integer confirmedRequests = 0;
     @Column(name = "published_on")
     private LocalDateTime publishedOn;
-    @Column(name = "requestModeration", nullable = false)
+    @Column(name = "request_moderation", nullable = false)
     private Boolean requestModeration;
     @Enumerated(EnumType.STRING)
-    private EventState state;
+    private State state;
     @Column(name = "title", nullable = false)
     private String title;
     private Integer views;

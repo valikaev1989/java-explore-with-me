@@ -9,7 +9,7 @@ import ru.practicum.server.event.model.EventDtos.EventFullDto;
 import ru.practicum.server.event.model.EventDtos.EventInputDto;
 import ru.practicum.server.event.model.EventDtos.EventMapper;
 import ru.practicum.server.event.model.EventDtos.EventShortDto;
-import ru.practicum.server.event.model.EventState;
+import ru.practicum.server.utils.State;
 import ru.practicum.server.event.repositories.EventRepository;
 import ru.practicum.server.exception.models.ValidationException;
 import ru.practicum.server.location.models.LocationDtos.LocationMapper;
@@ -38,7 +38,7 @@ public class EventServiceImpl implements EventService {
     public List<EventFullDto> getEventsByFilterForAdmin(Map<String, Object> filter) {
         log.info("EventServiceImpl.getEventsByFilterForAdmin start");
         List<Long> userIds = validation.getCorrectUserIdList((List<Long>) filter.get("users"));
-        List<EventState> states = validation.getCorrectEventStateList((List<String>) filter.get("states"));
+        List<State> states = validation.getCorrectStateList((List<String>) filter.get("states"));
         List<Long> categoryIds = validation.getCorrectCategoryIdList((List<Long>) filter.get("categories"));
         LocalDateTime rangeStart = convertRangeStart(filter.get("rangeStart"));
         LocalDateTime rangeEnd = convertRangeEnd(filter.get("rangeEnd"));
@@ -74,7 +74,7 @@ public class EventServiceImpl implements EventService {
         Pageable pageable = getPage((Integer) filter.get("from"), (Integer) filter.get("size"));
         List<EventShortDto> eventShortDtoList = getSortPublicEvents(
                 eventRepository.getAllEventsByParametersForPublic(
-                        EventState.PUBLISHED, categoryIds, text, paid, rangeStart, rangeEnd, pageable),
+                        State.PUBLISHED, categoryIds, text, paid, rangeStart, rangeEnd, pageable),
                 (Boolean) filter.get("onlyAvailable"),
                 (String) filter.get("sort"));
         log.info("EventServiceImpl.getAllEventsForPublic end: eventShortDtoList:");
@@ -146,7 +146,7 @@ public class EventServiceImpl implements EventService {
         log.info("EventServiceImpl.publishEvent start: eventId:{}", eventId);
         Event event = validation.validateAndReturnEventByEventId(eventId);
         validation.validateEventDateForPublish(event.getEventDate());
-        event.setState(EventState.PUBLISHED);
+        event.setState(State.PUBLISHED);
         EventFullDto eventFullDto = EventMapper.ToFullDto(eventRepository.save(event));
         log.info("EventServiceImpl.publishEvent end: eventFullDto:{}", eventFullDto);
         return eventFullDto;
@@ -157,7 +157,7 @@ public class EventServiceImpl implements EventService {
         log.info("EventServiceImpl.rejectEvent start: eventId:{}", eventId);
         Event event = validation.validateAndReturnEventByEventId(eventId);
         validation.validateForStatusPending(event);
-        event.setState(EventState.CANCELED);
+        event.setState(State.CANCELED);
         EventFullDto eventFullDto = EventMapper.ToFullDto(eventRepository.save(event));
         log.info("EventServiceImpl.rejectEvent end: eventFullDto:{}", eventFullDto);
         return eventFullDto;
@@ -169,7 +169,7 @@ public class EventServiceImpl implements EventService {
         Event event = validation.validateAndReturnEventByEventId(eventId);
         validation.validateForStatusPending(event);
         validation.validateForInitiatorEvent(userId, event);
-        event.setState(EventState.CANCELED);
+        event.setState(State.CANCELED);
         EventFullDto eventFullDto = EventMapper.ToFullDto(eventRepository.save(event));
         log.info("EventServiceImpl.cancelEvent end: eventFullDto:{}", eventFullDto);
         return eventFullDto;

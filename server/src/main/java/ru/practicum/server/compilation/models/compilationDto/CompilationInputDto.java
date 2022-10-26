@@ -14,8 +14,9 @@ import java.util.List;
 @AllArgsConstructor
 public class CompilationInputDto {
     @NotNull
-    private boolean pinned;
+    private Boolean pinned;
     @NotBlank
     private String title;
+    @NotNull
     private List<Long> events;
 }

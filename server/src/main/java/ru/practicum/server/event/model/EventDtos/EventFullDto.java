@@ -5,9 +5,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.server.category.model.categoryDtos.CategoryDto;
-import ru.practicum.server.event.model.EventState;
 import ru.practicum.server.location.models.LocationDtos.LocationDto;
 import ru.practicum.server.user.models.userDtos.UserOutputDto;
+import ru.practicum.server.utils.State;
 
 
 @Data
@@ -28,7 +28,7 @@ public class EventFullDto {
     private Integer confirmedRequests;
     private String publishedOn;
     private Boolean requestModeration;
-    private EventState state;
+    private State state;
     private String title;
     private Integer views;
 }

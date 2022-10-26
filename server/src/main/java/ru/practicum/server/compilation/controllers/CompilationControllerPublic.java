@@ -2,13 +2,14 @@ package ru.practicum.server.compilation.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.practicum.server.compilation.models.compilationDto.CompilationOutputDto;
 import ru.practicum.server.compilation.services.CompilationService;
+import ru.practicum.server.utils.FormatPage;
 
 import java.util.List;
+
+import static ru.practicum.server.utils.FormatPage.getPage;
 
 @Slf4j
 @RestController
@@ -18,12 +19,20 @@ public class CompilationControllerPublic {
     private final CompilationService compilationService;
 
     @GetMapping()
-    public List<CompilationOutputDto> getCompilations() {
-        return List.of();
+    public List<CompilationOutputDto> getCompilations(
+            @RequestParam(value = "pinned", required = false, defaultValue = "false") Boolean pinned,
+            @RequestParam(value = "from", required = false, defaultValue = "0") Integer from,
+            @RequestParam(value = "size", required = false, defaultValue = "10") Integer size) {
+        System.out.println("");
+        log.info("CompilationControllerPublic.getCompilations");
+        return compilationService.getCompilations(pinned, getPage(from, size));
     }
 
     @GetMapping("/compId")
-    public CompilationOutputDto getCompilationById() {
+    public CompilationOutputDto getCompilationById(@PathVariable Long compId) {
+        System.out.println("");
+        log.info("CompilationControllerPublic.getCompilations compId:{}", compId);
+        compilationService.getCompilationById(compId);
         return new CompilationOutputDto();
     }
 }

@@ -5,15 +5,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.server.category.model.Category;
 import ru.practicum.server.category.repositories.CategoryRepository;
+import ru.practicum.server.compilation.models.Compilation;
+import ru.practicum.server.compilation.repositories.CompilationRepository;
 import ru.practicum.server.event.model.Event;
 import ru.practicum.server.event.model.EventDtos.EventInputDto;
-import ru.practicum.server.event.model.EventState;
 import ru.practicum.server.event.repositories.EventRepository;
 import ru.practicum.server.exception.models.AccessException;
 import ru.practicum.server.exception.models.NotFoundException;
 import ru.practicum.server.exception.models.ValidationException;
 import ru.practicum.server.location.models.Location;
 import ru.practicum.server.location.repositories.LocationRepository;
+import ru.practicum.server.participationRequest.models.ParticipationRequest;
+import ru.practicum.server.participationRequest.repositories.ParticipationRepository;
 import ru.practicum.server.user.models.User;
 import ru.practicum.server.user.repositories.UserRepository;
 
@@ -31,6 +34,8 @@ public class Validation {
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
     private final EventRepository eventRepository;
+    private final CompilationRepository compilationRepository;
+    private final ParticipationRepository participationRepository;
 
     public User validateAndReturnUserByUserId(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format(
@@ -50,6 +55,16 @@ public class Validation {
     public Event validateAndReturnEventByEventId(Long eventId) {
         return eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException(String.format(
                 "событие с id '%d' не найдено", eventId)));
+    }
+
+    public Compilation validateAndReturnCompilationByCompilationId(Long compilationId) {
+        return compilationRepository.findById(compilationId).orElseThrow(() -> new NotFoundException(String.format(
+                "компиляции событий с id '%d' не найдено", compilationId)));
+    }
+
+    public ParticipationRequest validateAndReturnParticipationRequestByRequestId(Long requestId) {
+        return participationRepository.findById(requestId).orElseThrow(() -> new NotFoundException(String.format(
+                "запроса на участие в событие с id '%d' не найдено", requestId)));
     }
 
     public LocalDateTime validateEventDateAddEvent(LocalDateTime localDateTime) {
@@ -75,21 +90,21 @@ public class Validation {
     }
 
     public void validateForNotStatusPublished(Event event) {
-        if (!event.getState().equals(EventState.PUBLISHED)) {
+        if (!event.getState().equals(State.PUBLISHED)) {
             throw new AccessException(
                     String.format("Событие с eventId '%d' не опубликовано, доступ запрещен", event.getEventId()));
         }
     }
 
     public void validateForStatusPublished(EventInputDto event) {
-        if (EventState.valueOf(event.getState()).equals(EventState.PUBLISHED)) {
+        if (State.valueOf(event.getState()).equals(State.PUBLISHED)) {
             throw new AccessException(String.format(
                     "Событие с eventId '%d' опубликовано, редактирование запрещено", event.getId()));
         }
     }
 
     public void validateForStatusPending(Event event) {
-        if (!event.getState().equals(EventState.PENDING)) {
+        if (!event.getState().equals(State.PENDING)) {
             throw new AccessException(String.format(
                     "Событие с eventId '%d' не в статусе ожидания, доступ запрещен", event.getEventId()));
         }
@@ -112,7 +127,7 @@ public class Validation {
         return userIds;
     }
 
-    public Set<Event> getCorrectEventsList(List<Long> ids) {
+    public Set<Event> getCorrectEventsSet(List<Long> ids) {
         log.info("Validation.getCorrectEventsList start: ids:");
         ids.forEach(id -> log.info("{}", id));
         Set<Event> events = new HashSet<>();
@@ -146,19 +161,26 @@ public class Validation {
         return CategoryIds;
     }
 
-    public List<EventState> getCorrectEventStateList(List<String> states) {
-        log.info("Validation.getCorrectEventStateList start: states:");
+    public List<State> getCorrectStateList(List<String> states) {
+        log.info("Validation.getCorrectStateList start: states:");
         states.forEach(state -> log.info("{}", state));
-        List<EventState> stateList = new ArrayList<>();
+        List<State> stateList = new ArrayList<>();
         for (String state : states) {
             try {
-                stateList.add(EventState.valueOf(state));
+                stateList.add(State.valueOf(state));
             } catch (NotFoundException ex) {
                 log.warn(ex.getMessage());
             }
         }
-        log.info("Validation.getCorrectEventStateList end: stateList:");
+        log.info("Validation.getCorrectStateList end: stateList:");
         stateList.forEach(state -> log.info("{}", state));
         return stateList;
+    }
+
+    public void validateOwnerRequest(Long userId, ParticipationRequest request) {
+        if (!request.getUser().getUserId().equals(userId)) {
+            throw new AccessException(String.format(
+                    "пользователь с userId: '%d', не владелец запроса: '%d'", userId, request.getRequestId()));
+        }
     }
 }
