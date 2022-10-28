@@ -7,6 +7,7 @@ import ru.practicum.server.compilation.models.compilationDto.CompilationOutputDt
 import ru.practicum.server.compilation.services.CompilationService;
 import ru.practicum.server.utils.FormatPage;
 
+import javax.validation.constraints.Min;
 import java.util.List;
 
 import static ru.practicum.server.utils.FormatPage.getPage;
@@ -28,11 +29,10 @@ public class CompilationControllerPublic {
         return compilationService.getCompilations(pinned, getPage(from, size));
     }
 
-    @GetMapping("/compId")
-    public CompilationOutputDto getCompilationById(@PathVariable Long compId) {
+    @GetMapping("/{compId}")
+    public CompilationOutputDto getCompilationById(@PathVariable @Min(0) Long compId) {
         System.out.println("");
         log.info("CompilationControllerPublic.getCompilations compId:{}", compId);
-        compilationService.getCompilationById(compId);
-        return new CompilationOutputDto();
+        return compilationService.getCompilationById(compId);
     }
 }

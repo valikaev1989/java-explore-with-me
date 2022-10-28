@@ -37,8 +37,9 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationOutputDto addCompilation(CompilationInputDto compilationInputDto) {
         log.info("CompilationServiceImpl.addCompilation start compilationInputDto: {}", compilationInputDto);
         Set<Event> events = validation.getCorrectEventsSet(compilationInputDto.getEvents());
-        CompilationOutputDto compilationOutputDto = toCompilationDto(
-                compilationRepository.save(toCompilation(compilationInputDto, events)));
+        Compilation compilation = toCompilation(compilationInputDto, events);
+        Compilation result = compilationRepository.save(compilation);
+        CompilationOutputDto compilationOutputDto = toCompilationDto(result);
         log.info("CompilationServiceImpl.addCompilation end:");
         logCompilationOutputDto(compilationOutputDto);
         return compilationOutputDto;
@@ -57,8 +58,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public void deleteCompilation(Long compId) {
         log.info("CompilationServiceImpl.deleteCompilation start compId: {}", compId);
-        validation.validateAndReturnCompilationByCompilationId(compId);
-        compilationRepository.deleteById(compId);
+        compilationRepository.delete(validation.validateAndReturnCompilationByCompilationId(compId));
         log.info("CompilationServiceImpl.deleteCompilation end compId: {}", compId);
     }
 
@@ -86,10 +86,10 @@ public class CompilationServiceImpl implements CompilationService {
     public void deleteEventFromCompilation(Long compId, Long eventId) {
         log.info("CompilationServiceImpl.deleteEventFromCompilation start compId: {}, eventId: {}", compId, eventId);
         Compilation compilation = validation.validateAndReturnCompilationByCompilationId(compId);
-        compilation.getEventSet().removeIf(e -> e.getEventId().equals(eventId));
+        compilation.getEventSet().removeIf(event -> event.getEventId().equals(eventId));
+        System.out.println(compilation.getEventSet());
         compilationRepository.save(compilation);
-        log.info("CompilationServiceImpl.deleteEventFromCompilation end:");
-        logCompilation(validation.validateAndReturnCompilationByCompilationId(compId));
+        log.info("CompilationServiceImpl.deleteEventFromCompilation end");
     }
 
     @Override

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.server.event.model.Event;
 import ru.practicum.server.event.model.EventDtos.EventFullDto;
 import ru.practicum.server.event.model.EventDtos.EventInputDto;
@@ -84,18 +85,15 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto addEvent(Long userId, EventInputDto eventInputDto) {
-        log.info("EventServiceImpl.addEvent start: userId:{}, eventInputDto:{}", userId, eventInputDto);
+        log.info("EventServiceImpl.addEvent start: userId: {}, eventInputDto: {}", userId, eventInputDto);
         validation.validateEventDateAddEvent(LocalDateTime.parse(eventInputDto.getEventDate(), FORMATTER));
         Event event = EventMapper.toEvent(
                 validation.validateAndReturnUserByUserId(userId),
                 validation.validateAndReturnCategoryByCategoryId(eventInputDto.getCategory()),
                 LocationMapper.toLocation(locationService.addLocation(eventInputDto.getLocation())),
                 eventInputDto);
-        System.out.println("");
-        System.out.println(event);
-        System.out.println("");
         EventFullDto eventFullDto = EventMapper.ToFullDto(eventRepository.save(event));
-        log.info("EventServiceImpl.addEvent end: eventFullDto{}", eventFullDto);
+        log.info("EventServiceImpl.addEvent end: eventFullDto: {}", eventFullDto);
         return eventFullDto;
     }
 
@@ -112,10 +110,13 @@ public class EventServiceImpl implements EventService {
     public EventFullDto updateEventFromInitiator(Long userId, EventInputDto eventInputDto) {
         log.info("EventServiceImpl.updateEventFromInitiator start: userId:{}, eventInputDto:{}", userId, eventInputDto);
         validation.validateAndReturnUserByUserId(userId);
-        Event event = validation.validateAndReturnEventByEventId(eventInputDto.getId());
-        validation.validateForInitiatorEvent(userId, event);
-        validation.validateForStatusPublished(eventInputDto);
-        EventFullDto eventFullDto = EventMapper.ToFullDto(prepareForUpdateEvent(event, eventInputDto));
+        Event event = eventRepository.getByAndInitiator_UserId(userId);
+        validation.validateForStatusPublished(event);
+        if (event.getState().equals(State.REJECTED)) {
+            event.setState(State.PENDING);
+        }
+        prepareForUpdateEvent(event, eventInputDto);
+        EventFullDto eventFullDto = EventMapper.ToFullDto(event);
         log.info("EventServiceImpl.updateEventFromInitiator end: eventFullDto{}", eventFullDto);
         return eventFullDto;
     }
@@ -176,8 +177,7 @@ public class EventServiceImpl implements EventService {
     }
 
     private Event prepareForUpdateEvent(Event event, EventInputDto eventInputDto) {
-        LocalDateTime eventDate = validation.validateEventDateAddEvent(
-                LocalDateTime.parse(eventInputDto.getEventDate(), FORMATTER));
+
         if (eventInputDto.getCategory() != null) {
             event.setCategory(validation.validateAndReturnCategoryByCategoryId(eventInputDto.getCategory()));
         }
@@ -192,7 +192,9 @@ public class EventServiceImpl implements EventService {
         if (eventInputDto.getDescription() != null) {
             event.setDescription(eventInputDto.getDescription());
         }
-        if (eventDate != null) {
+        if (eventInputDto.getEventDate() != null) {
+            LocalDateTime eventDate = validation.validateEventDateAddEvent(
+                    LocalDateTime.parse(eventInputDto.getEventDate(), FORMATTER));
             event.setEventDate(eventDate);
         }
         if (eventInputDto.getPaid() != null) {

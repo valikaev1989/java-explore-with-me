@@ -12,6 +12,7 @@ import ru.practicum.server.exception.models.ValidationException;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 
 import static ru.practicum.server.utils.FormatDate.FORMATTER;
 
@@ -23,7 +24,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse notFound(NotFoundException e) {
         return ErrorResponse.builder()
-                .errors(Arrays.asList(e.getStackTrace()))
+                .errors(List.of())
                 .message(e.getLocalizedMessage())
                 .status(String.valueOf(HttpStatus.NOT_FOUND))
                 .reason("The required object was not found")
@@ -34,7 +35,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse badRequest(ValidationException e) {
         return ErrorResponse.builder()
-                .errors(Arrays.asList(e.getStackTrace()))
+                .errors(List.of())
                 .message(e.getLocalizedMessage())
                 .status(String.valueOf(HttpStatus.BAD_REQUEST))
                 .reason("For the requested operation the conditions are not met")
@@ -46,7 +47,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse conflict(ConflictException e) {
         return ErrorResponse.builder()
-                .errors(Arrays.asList(e.getStackTrace()))
+                .errors(List.of())
                 .message(e.getLocalizedMessage())
                 .status(String.valueOf(HttpStatus.CONFLICT))
                 .reason("Integrity constraint has been violated")
@@ -58,7 +59,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse access(AccessException e) {
         return ErrorResponse.builder()
-                .errors(Arrays.asList(e.getStackTrace()))
+                .errors(List.of())
                 .message(e.getLocalizedMessage())
                 .status(String.valueOf(HttpStatus.FORBIDDEN))
                 .reason("For the requested operation the conditions are not met")
@@ -70,7 +71,7 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse internal(Throwable e) {
         return ErrorResponse.builder()
-                .errors(Arrays.asList(e.getStackTrace()))
+                .errors(List.of())
                 .message(e.getLocalizedMessage())
                 .status(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR))
                 .reason("Error occurred")

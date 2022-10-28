@@ -8,7 +8,6 @@ import ru.practicum.server.category.repositories.CategoryRepository;
 import ru.practicum.server.compilation.models.Compilation;
 import ru.practicum.server.compilation.repositories.CompilationRepository;
 import ru.practicum.server.event.model.Event;
-import ru.practicum.server.event.model.EventDtos.EventInputDto;
 import ru.practicum.server.event.repositories.EventRepository;
 import ru.practicum.server.exception.models.AccessException;
 import ru.practicum.server.exception.models.NotFoundException;
@@ -96,10 +95,10 @@ public class Validation {
         }
     }
 
-    public void validateForStatusPublished(EventInputDto event) {
-        if (State.valueOf(event.getState()).equals(State.PUBLISHED)) {
+    public void validateForStatusPublished(Event event) {
+        if (State.PUBLISHED.equals(event.getState())) {
             throw new AccessException(String.format(
-                    "Событие с eventId '%d' опубликовано, редактирование запрещено", event.getId()));
+                    "Событие с eventId '%d' опубликовано, редактирование запрещено", event.getEventId()));
         }
     }
 
@@ -178,9 +177,42 @@ public class Validation {
     }
 
     public void validateOwnerRequest(Long userId, ParticipationRequest request) {
+        validateAndReturnUserByUserId(userId);
         if (!request.getUser().getUserId().equals(userId)) {
             throw new AccessException(String.format(
                     "пользователь с userId: '%d', не владелец запроса: '%d'", userId, request.getRequestId()));
+        }
+    }
+
+    public void validateAddParticipationRequest(Long userId, Event event) {
+        if (event.getInitiator().getUserId().equals(userId)) {
+            log.warn("Инициатор события с id: {} не может отправлять заявки на участие в это событие с id: {}",
+                    userId, event.getEventId());
+            throw new ValidationException(String.format(
+                    "Инициатор события с id: ''%d не может отправлять заявки на участие в это событие с id: '%d'",
+                    userId, event.getEventId()));
+        }
+        if (participationRepository.checkDuplicateRequest(event.getEventId(), userId,
+                State.PENDING, State.CONFIRMED)) {
+            log.warn("Заявка пользователя с id: {} на участие в событие с id: {} уже существует",
+                    userId, event.getEventId());
+            throw new ValidationException(String.format(
+                    "Заявка пользователя с id: '%d' на участие в событие с id: '%d' уже существует",
+                    userId, event.getEventId()));
+        }
+        if (!event.getState().equals(State.PUBLISHED)) {
+            log.warn("Участие в событии с id: {} невозможно, так как его не опубликали", event.getEventId());
+            throw new ValidationException(String.format(
+                    "Участие в событии с id: '%d' невозможно, так как его не опубликали", event.getEventId()));
+        }
+        validateParticipantLimit(event);
+    }
+
+    public void validateParticipantLimit(Event event) {
+        if (event.getParticipantLimit().equals(event.getConfirmedRequests())) {
+            log.warn("Лимит участников в событии с id: {} заполнен", event.getEventId());
+            throw new ValidationException(String.format(
+                    "Лимит участников в событии с id: '%d' заполнен", event.getEventId()));
         }
     }
 }

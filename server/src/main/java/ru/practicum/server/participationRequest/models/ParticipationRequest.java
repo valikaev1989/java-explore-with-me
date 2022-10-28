@@ -30,5 +30,5 @@ public class ParticipationRequest {
     @Column(name = "created")
     private LocalDateTime created = LocalDateTime.now();
     @Enumerated(EnumType.STRING)
-    private State state;
+    private State status;
 }

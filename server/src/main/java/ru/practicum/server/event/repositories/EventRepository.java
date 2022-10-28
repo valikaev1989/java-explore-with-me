@@ -36,10 +36,13 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "where e.state = ?1 " +
             "and e.category.categoryId in ?2 " +
             "and e.annotation like concat('%', ?3, '%') " +
-            "and e.description like concat('%', ?3, '%') " +
             "and e.paid = ?4 " +
             "and e.eventDate between ?5 and ?6")
     List<Event> getAllEventsByParametersForPublic(
             State state, List<Long> categoriesIds, String text, Boolean paid,
             LocalDateTime rangeStart, LocalDateTime rangeEnd, Pageable pageable);
+
+    //    List<Event> getAllByStateAndCategory_CategoryIdInAndAndPaid();
+    @Query("select e from Event e where e.initiator.userId = ?1")
+    Event getByAndInitiator_UserId(Long userId);
 }

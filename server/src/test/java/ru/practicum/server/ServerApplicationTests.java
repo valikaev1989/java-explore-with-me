@@ -11,11 +11,21 @@ import ru.practicum.server.compilation.controllers.CompilationControllerAdmin;
 import ru.practicum.server.event.controllers.EventControllerAdmin;
 import ru.practicum.server.event.controllers.EventControllerPrivate;
 import ru.practicum.server.event.controllers.EventControllerPublic;
+import ru.practicum.server.event.model.EventDtos.EventFullDto;
 import ru.practicum.server.event.model.EventDtos.EventInputDto;
+import ru.practicum.server.event.services.EventService;
 import ru.practicum.server.location.models.LocationDtos.LocationInputDto;
+import ru.practicum.server.participationRequest.models.ParticipationDto.ParticipationRequestDto;
+import ru.practicum.server.participationRequest.models.ParticipationRequest;
+import ru.practicum.server.participationRequest.services.ParticipationService;
+import ru.practicum.server.participationRequest.services.ParticipationServiceImpl;
 import ru.practicum.server.user.controllers.UserControllerAdmin;
+import ru.practicum.server.user.models.User;
 import ru.practicum.server.user.models.userDtos.UserInputDto;
+import ru.practicum.server.user.repositories.UserRepository;
 import ru.practicum.server.user.services.UserService;
+import ru.practicum.server.utils.State;
+import ru.practicum.server.utils.Validation;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -29,15 +39,24 @@ class ServerApplicationTests {
     private final UserControllerAdmin userControllerAdmin;
     private final CompilationControllerAdmin compilationControllerAdmin;
     private final EventControllerAdmin eController;
+    private final UserRepository userRepository;
+    private final Validation validation;
+    private final ParticipationService participationService;
+    private final EventService eventService;
 
     @Test
     void PostEvent() {
         userService.addUser(new UserInputDto("qwe", "qwe@qwe.ru"));
+        userService.addUser(new UserInputDto("asd", "asd@asd.ru"));
         categoryService.addCategory(new CategoryDto(null, "qwe"));
         EventInputDto eventInputDto = new EventInputDto(
-                null, "annot", 1L, "desc", "2022-10-25 05:42:30",
-                new LocationInputDto(847F, 645F), true, 564, true, "title", null);
-        eventControllerPrivate.addEvent(1L, eventInputDto);
+                null, "annot", 1L, "desc", "2022-10-29 05:42:30",
+                new LocationInputDto(847F, 645F), true, 564, false, "title", State.PUBLISHED.toString());
+        EventFullDto eventFullDto = eventService.addEvent(1L, eventInputDto);
+        ParticipationRequestDto requestDto = participationService.addUserRequestParticipation(2L, 1L);
+        System.out.println(requestDto);
+        System.out.println(eventFullDto);
+        System.out.println(eventService.getEventByIdForPublic(1L));
     }
 
     @Test

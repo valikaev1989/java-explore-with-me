@@ -1,9 +1,6 @@
 package ru.practicum.server.event.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.server.category.model.Category;
 import ru.practicum.server.location.models.Location;
 import ru.practicum.server.user.models.User;
@@ -13,7 +10,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@ToString
 @Entity
 @Table(name = "events")
 @Builder(toBuilder = true)
@@ -24,7 +23,7 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id", nullable = false)
     private Long eventId;
-    @Column(name = "annotation",length = 5000)
+    @Column(name = "annotation", length = 5000)
     @NotBlank
     private String annotation;
     @ManyToOne
@@ -33,7 +32,7 @@ public class Event {
     @Column(name = "created_on", nullable = false)
     private LocalDateTime createdOn;
     @NotBlank
-    @Column(name = "description",length = 5000)
+    @Column(name = "description", length = 5000)
     private String description;
     @Column(name = "event_date", nullable = false)
     private LocalDateTime eventDate;
@@ -46,9 +45,9 @@ public class Event {
     @Column(name = "paid", nullable = false)
     private Boolean paid;
     @Column(name = "participant_limit")
-    private Integer participantLimit = 0;
+    private Integer participantLimit;
     @Column(name = "confirmed_requests")
-    private Integer confirmedRequests = 0;
+    private Integer confirmedRequests;
     @Column(name = "published_on")
     private LocalDateTime publishedOn;
     @Column(name = "request_moderation", nullable = false)
@@ -57,5 +56,5 @@ public class Event {
     private State state;
     @Column(name = "title", nullable = false)
     private String title;
-    private Integer views;
+    private Integer views = 0;
 }

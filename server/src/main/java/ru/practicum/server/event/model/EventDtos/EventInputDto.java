@@ -16,23 +16,14 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class EventInputDto {
     private Long id;
-    @NotBlank
     private String annotation;
     private Long category;
-    @NotBlank
     private String description;
-    @NotBlank
     private String eventDate;
-    @NotNull
     private LocationInputDto location;
-    @NotNull
     private Boolean paid;
-    @NotNull
-    @Min(0)
     private Integer participantLimit;
-    @NotNull
     private Boolean requestModeration;
-    @NotBlank
     private String title;
     private String state;
 }

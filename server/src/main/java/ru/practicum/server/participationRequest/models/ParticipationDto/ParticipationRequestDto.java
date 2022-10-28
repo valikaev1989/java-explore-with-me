@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class ParticipationRequestDto {
     private Long id;
     private Long event;
+    private String created;
     private Long requester;
     private String status;
 }

@@ -5,6 +5,8 @@ import ru.practicum.server.participationRequest.models.ParticipationRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.practicum.server.utils.FormatDate.FORMATTER;
+
 public class ParticipationRequestMapper {
 
     public static ParticipationRequestDto toDtoRequest(ParticipationRequest participationRequest) {
@@ -12,7 +14,8 @@ public class ParticipationRequestMapper {
                 .id(participationRequest.getRequestId())
                 .event(participationRequest.getEvent().getEventId())
                 .requester(participationRequest.getUser().getUserId())
-                .status(participationRequest.getState().toString())
+                .created(participationRequest.getCreated().format(FORMATTER))
+                .status(participationRequest.getStatus().toString())
                 .build();
     }
 
