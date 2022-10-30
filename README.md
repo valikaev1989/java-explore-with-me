@@ -102,4 +102,4 @@
 4. Команда "docker-compose up" запускает оба сервиса с их бд
 5. Для проверки работоспособности приложения предусмотрены тесты для приложения постман:  
    [ewm-service](https://github.com/valikaev1989/java-explore-with-me/blob/develop/postmanTests/ewm-main-service.json)  
-   [https://github.com/valikaev1989/java-explore-with-me/blob/develop/postmanTests/ewm-stat-service.json](https://github.com/valikaev1989/java-explore-with-me/blob/develop/postmanTests/ewm-stat-service.json)
+   [ewm-statistic](https://github.com/valikaev1989/java-explore-with-me/blob/develop/postmanTests/ewm-stat-service.json)
