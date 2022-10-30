@@ -37,33 +37,33 @@ public class Validation {
     private final ParticipationRepository participationRepository;
 
     public User validateAndReturnUserByUserId(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format(
-                "пользователь с id '%d' не найден", userId)));
+        return userRepository.findById(userId).orElseThrow(() ->
+                new NotFoundException(String.format("пользователь с id '%d' не найден", userId)));
     }
 
     public Category validateAndReturnCategoryByCategoryId(Long categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(() -> new NotFoundException(String.format(
-                "категория с id '%d' не найдена", categoryId)));
+        return categoryRepository.findById(categoryId).orElseThrow(() ->
+                new NotFoundException(String.format("категория с id '%d' не найдена", categoryId)));
     }
 
     public Location validateAndReturnLocationByLocationId(Long locationId) {
-        return locationRepository.findById(locationId).orElseThrow(() -> new NotFoundException(String.format(
-                "локация с id '%d' не найдена", locationId)));
+        return locationRepository.findById(locationId).orElseThrow(() ->
+                new NotFoundException(String.format("локация с id '%d' не найдена", locationId)));
     }
 
     public Event validateAndReturnEventByEventId(Long eventId) {
-        return eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException(String.format(
-                "событие с id '%d' не найдено", eventId)));
+        return eventRepository.findById(eventId).orElseThrow(() ->
+                new NotFoundException(String.format("событие с id '%d' не найдено", eventId)));
     }
 
     public Compilation validateAndReturnCompilationByCompilationId(Long compilationId) {
-        return compilationRepository.findById(compilationId).orElseThrow(() -> new NotFoundException(String.format(
-                "компиляции событий с id '%d' не найдено", compilationId)));
+        return compilationRepository.findById(compilationId).orElseThrow(() ->
+                new NotFoundException(String.format("компиляции событий с id '%d' не найдено", compilationId)));
     }
 
     public ParticipationRequest validateAndReturnParticipationRequestByRequestId(Long requestId) {
-        return participationRepository.findById(requestId).orElseThrow(() -> new NotFoundException(String.format(
-                "запроса на участие в событие с id '%d' не найдено", requestId)));
+        return participationRepository.findById(requestId).orElseThrow(() ->
+                new NotFoundException(String.format("запроса на участие в событие с id '%d' не найдено", requestId)));
     }
 
     public LocalDateTime validateEventDateAddEvent(LocalDateTime localDateTime) {
@@ -83,29 +83,29 @@ public class Validation {
 
     public void validateForInitiatorEvent(Long userId, Event event) {
         if (!event.getInitiator().getUserId().equals(userId)) {
-            throw new AccessException(String.format(
-                    "пользователь с userId: '%d', не владелец события: '%d'", userId, event.getEventId()));
+            throw new AccessException(String.format("пользователь с userId: '%d', не владелец события: '%d'",
+                    userId, event.getEventId()));
         }
     }
 
     public void validateForNotStatusPublished(Event event) {
         if (!event.getState().equals(State.PUBLISHED)) {
-            throw new AccessException(
-                    String.format("Событие с eventId '%d' не опубликовано, доступ запрещен", event.getEventId()));
+            throw new AccessException(String.format("Событие с eventId '%d' не опубликовано, доступ запрещен",
+                    event.getEventId()));
         }
     }
 
     public void validateForStatusPublished(Event event) {
         if (State.PUBLISHED.equals(event.getState())) {
-            throw new AccessException(String.format(
-                    "Событие с eventId '%d' опубликовано, редактирование запрещено", event.getEventId()));
+            throw new AccessException(String.format("Событие с eventId '%d' опубликовано, редактирование запрещено",
+                    event.getEventId()));
         }
     }
 
     public void validateForStatusPending(Event event) {
         if (!event.getState().equals(State.PENDING)) {
-            throw new AccessException(String.format(
-                    "Событие с eventId '%d' не в статусе ожидания, доступ запрещен", event.getEventId()));
+            throw new AccessException(String.format("Событие с eventId '%d' не в статусе ожидания, доступ запрещен",
+                    event.getEventId()));
         }
     }
 
@@ -179,8 +179,8 @@ public class Validation {
     public void validateOwnerRequest(Long userId, ParticipationRequest request) {
         validateAndReturnUserByUserId(userId);
         if (!request.getUser().getUserId().equals(userId)) {
-            throw new AccessException(String.format(
-                    "пользователь с userId: '%d', не владелец запроса: '%d'", userId, request.getRequestId()));
+            throw new AccessException(String.format("пользователь с userId: '%d', не владелец запроса: '%d'",
+                    userId, request.getRequestId()));
         }
     }
 
@@ -188,22 +188,20 @@ public class Validation {
         if (event.getInitiator().getUserId().equals(userId)) {
             log.warn("Инициатор события с id: {} не может отправлять заявки на участие в это событие с id: {}",
                     userId, event.getEventId());
-            throw new ValidationException(String.format(
-                    "Инициатор события с id: ''%d не может отправлять заявки на участие в это событие с id: '%d'",
-                    userId, event.getEventId()));
+            throw new ValidationException(String.format("Инициатор события с id: ''%d не может отправлять заявки" +
+                    " на участие в это событие с id: '%d'", userId, event.getEventId()));
         }
-        if (participationRepository.checkDuplicateRequest(event.getEventId(), userId,
-                State.PENDING, State.CONFIRMED)) {
+        if (participationRepository.checkDuplicateRequest(
+                event.getEventId(), userId, State.PENDING, State.CONFIRMED)) {
             log.warn("Заявка пользователя с id: {} на участие в событие с id: {} уже существует",
                     userId, event.getEventId());
-            throw new ValidationException(String.format(
-                    "Заявка пользователя с id: '%d' на участие в событие с id: '%d' уже существует",
-                    userId, event.getEventId()));
+            throw new ValidationException(String.format("Заявка пользователя с id: '%d' на участие в событие с id:" +
+                    " '%d' уже существует", userId, event.getEventId()));
         }
         if (!event.getState().equals(State.PUBLISHED)) {
-            log.warn("Участие в событии с id: {} невозможно, так как его не опубликали", event.getEventId());
-            throw new ValidationException(String.format(
-                    "Участие в событии с id: '%d' невозможно, так как его не опубликали", event.getEventId()));
+            log.warn("Участие в событии с id: {} невозможно, так как его не опубликовали", event.getEventId());
+            throw new ValidationException(String.format("Участие в событии с id: '%d' невозможно, " +
+                    "так как его не опубликовали", event.getEventId()));
         }
         validateParticipantLimit(event);
     }
@@ -211,8 +209,8 @@ public class Validation {
     public void validateParticipantLimit(Event event) {
         if (event.getParticipantLimit().equals(event.getConfirmedRequests())) {
             log.warn("Лимит участников в событии с id: {} заполнен", event.getEventId());
-            throw new ValidationException(String.format(
-                    "Лимит участников в событии с id: '%d' заполнен", event.getEventId()));
+            throw new ValidationException(
+                    String.format("Лимит участников в событии с id: '%d' заполнен", event.getEventId()));
         }
     }
 }

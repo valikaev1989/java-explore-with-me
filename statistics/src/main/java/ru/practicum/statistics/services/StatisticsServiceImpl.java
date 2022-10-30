@@ -3,6 +3,7 @@ package ru.practicum.statistics.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.statistics.models.dto.EndpointDto;
 import ru.practicum.statistics.models.dto.ViewStats;
 import ru.practicum.statistics.repositories.StatisticsRepository;
@@ -19,9 +20,11 @@ import static ru.practicum.statistics.utils.FormatDate.convertRangeStart;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class StatisticsServiceImpl implements StatisticsService {
     private final StatisticsRepository statisticsRepository;
 
+    @Transactional
     @Override
     public EndpointDto addEndpointHit(EndpointDto endpointDto) {
         log.info("StatisticsServiceImpl.addEndpointHit start:");

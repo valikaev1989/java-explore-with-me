@@ -3,6 +3,7 @@ package ru.practicum.server.location.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.server.location.models.Location;
 import ru.practicum.server.location.models.LocationDtos.LocationDto;
 import ru.practicum.server.location.models.LocationDtos.LocationInputDto;
@@ -18,6 +19,7 @@ public class LocationServiceImpl implements LocationService {
     private final Validation validation;
 
     @Override
+    @Transactional
     public LocationDto addLocation(LocationInputDto locationInputDto) {
         log.info("LocationService.addLocation start: locationInputDto:{}", locationInputDto);
         LocationDto locationResultDto = LocationMapper.locationDto(locationRepository.save(LocationMapper.toLocation(locationInputDto)));
@@ -26,14 +28,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public LocationDto getLocation(Long locationId) {
-        log.info("LocationService.getLocation start: locationId:{}", locationId);
-        LocationDto locationDto = LocationMapper.locationDto(validation.validateAndReturnLocationByLocationId(locationId));
-        log.info("LocationService.getLocation end: locationDto:{}", locationDto);
-        return locationDto;
-    }
-
-    @Override
+    @Transactional
     public LocationDto updateLocation(LocationDto locationDto) {
         log.info("LocationService.updateLocation start: locationDto:{}", locationDto);
         Location location = validation.validateAndReturnLocationByLocationId(locationDto.getLocationId());
@@ -46,13 +41,5 @@ public class LocationServiceImpl implements LocationService {
         LocationDto locationDtoResult = LocationMapper.locationDto(locationRepository.save(location));
         log.info("LocationService.updateLocation end: locationDtoResult:{}", locationDtoResult);
         return locationDtoResult;
-    }
-
-    @Override
-    public void deleteLocation(Long locationId) {
-        log.info("LocationService.deleteLocation start: locationId:{}", locationId);
-        validation.validateAndReturnLocationByLocationId(locationId);
-        locationRepository.deleteById(locationId);
-        log.info("LocationService.deleteLocation end: locationId:{}", locationId);
     }
 }

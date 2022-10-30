@@ -2,11 +2,8 @@ package ru.practicum.server.compilation.repositories;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.server.compilation.models.Compilation;
-import ru.practicum.server.compilation.models.compilationDto.CompilationOutputDto;
 
 import java.util.List;
 

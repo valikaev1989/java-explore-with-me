@@ -19,7 +19,7 @@ public class ParticipationControllerPrivate {
     @PostMapping
     public ParticipationRequestDto addUserRequestParticipation(
             @PathVariable(value = "userId") @Min(0) Long userId, @RequestParam @Min(0) Long eventId) {
-        System.out.println("");
+        System.out.println("\n");
         log.info("ParticipationControllerPrivate.addUserRequestParticipation: userId:{}, eventId:{}",
                 userId, eventId);
         return participationService.addUserRequestParticipation(userId, eventId);
@@ -29,7 +29,7 @@ public class ParticipationControllerPrivate {
     public ParticipationRequestDto cancelUserRequestParticipation(
             @PathVariable(value = "userId") @Min(0) Long userId,
             @PathVariable(value = "requestId") @Min(0) Long requestId) {
-        System.out.println("");
+        System.out.println("\n");
         log.info("ParticipationControllerPrivate.cancelUserRequestParticipation: userId:{}, eventId:{}",
                 userId, requestId);
         return participationService.cancelUserRequestParticipation(userId, requestId);
@@ -38,7 +38,7 @@ public class ParticipationControllerPrivate {
     @GetMapping
     public List<ParticipationRequestDto> getUserRequestsParticipation(
             @PathVariable(value = "userId") @Min(0) Long userId) {
-        System.out.println("");
+        System.out.println("\n");
         log.info("ParticipationControllerPrivate.getUserRequestsParticipation: userId:{}", userId);
         return participationService.getUserRequestsParticipation(userId);
     }

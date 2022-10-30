@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.practicum.server.utils.FormatDate.FORMATTER;
+
 @RequiredArgsConstructor
 public class EventMapper {
 
@@ -80,10 +81,10 @@ public class EventMapper {
     }
 
     public static List<EventFullDto> ToFullDtoList(List<Event> userEvents, EventClient eventClient) {
-        return userEvents.stream().map((Event event) -> ToFullDto(event,eventClient)).collect(Collectors.toList());
+        return userEvents.stream().map((Event event) -> ToFullDto(event, eventClient)).collect(Collectors.toList());
     }
 
     public static List<EventShortDto> ToShortDtoList(Set<Event> events, EventClient eventClient) {
-        return events.stream().map((Event event) -> toShortDto(event,eventClient)).collect(Collectors.toList());
+        return events.stream().map((Event event) -> toShortDto(event, eventClient)).collect(Collectors.toList());
     }
 }

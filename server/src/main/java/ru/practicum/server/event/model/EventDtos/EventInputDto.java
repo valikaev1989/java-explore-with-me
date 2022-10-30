@@ -6,10 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.server.location.models.LocationDtos.LocationInputDto;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 @Data
 @Builder(toBuilder = true)
 @NoArgsConstructor

@@ -21,7 +21,7 @@ public class Category {
     @Column(name = "category_id", nullable = false)
     private Long categoryId;
 
-    @Column(name = "category_name",  length = 50)
+    @Column(name = "category_name", length = 50)
     @NotBlank
     private String name;
 }

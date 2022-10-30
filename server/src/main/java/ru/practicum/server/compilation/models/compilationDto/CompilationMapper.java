@@ -3,7 +3,6 @@ package ru.practicum.server.compilation.models.compilationDto;
 import ru.practicum.server.clientStatistics.EventClient;
 import ru.practicum.server.compilation.models.Compilation;
 import ru.practicum.server.event.model.Event;
-import ru.practicum.server.event.model.EventDtos.EventMapper;
 
 import java.util.List;
 import java.util.Set;
@@ -26,11 +25,13 @@ public class CompilationMapper {
                 .id(compilation.getCompilationId())
                 .pinned(compilation.getPinned())
                 .title(compilation.getTitle())
-                .events(ToShortDtoList(compilation.getEventSet(),eventClient))
+                .events(ToShortDtoList(compilation.getEventSet(), eventClient))
                 .build();
     }
 
-    public static List<CompilationOutputDto> getCompilationList(List<Compilation> compilationOutputDtoList, EventClient eventClient) {
-        return compilationOutputDtoList.stream().map((Compilation compilation) -> toCompilationDto(compilation,eventClient)).collect(Collectors.toList());
+    public static List<CompilationOutputDto> getCompilationList(
+            List<Compilation> compilationOutputDtoList, EventClient eventClient) {
+        return compilationOutputDtoList.stream().map((Compilation compilation) ->
+                toCompilationDto(compilation, eventClient)).collect(Collectors.toList());
     }
 }

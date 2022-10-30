@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.server.category.model.Category;
 import ru.practicum.server.category.model.categoryDtos.CategoryMapper;
 import ru.practicum.server.category.model.categoryDtos.CategoryDto;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
@@ -28,6 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryDto addCategory(CategoryDto categoryDto) {
         log.info("CategoryService.addCategory start categoryDto:{}", categoryDto);
         CategoryDto categoryDtoResult = CategoryMapper.toCategoryDto(
@@ -37,6 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public CategoryDto updateCategory(CategoryDto categoryDto) {
         log.info("CategoryService.updateCategory start categoryDto:{}", categoryDto);
         Category category = validation.validateAndReturnCategoryByCategoryId(categoryDto.getId());
@@ -56,6 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    @Transactional
     public void deleteCategoryById(Long categoryId) {
         log.info("CategoryService.deleteCategoryById start categoryId:{}", categoryId);
         validation.validateAndReturnCategoryByCategoryId(categoryId);

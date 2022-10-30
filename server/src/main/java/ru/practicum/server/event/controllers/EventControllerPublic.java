@@ -45,7 +45,7 @@ public class EventControllerPublic {
                 "from", from,
                 "size", size
         );
-        System.out.println("");
+        System.out.println("\n");
         log.info("client ip: {}", request.getRemoteAddr());
         log.info("endpoint path: {}", request.getRequestURI());
         log.info("EventControllerPublic.getAllEventForPublic filter:");
@@ -57,7 +57,7 @@ public class EventControllerPublic {
     @GetMapping("/{eventId}")
     public EventFullDto getEventByIdForPublic(@PathVariable(value = "eventId") @Min(0) Long eventId,
                                               HttpServletRequest request) {
-        System.out.println("");
+        System.out.println("\n");
         log.info("client ip: {}", request.getRemoteAddr());
         log.info("endpoint path: {}", request.getRequestURI());
         log.info("EventControllerPublic.getEventByIdForPublic: eventId:{}", eventId);

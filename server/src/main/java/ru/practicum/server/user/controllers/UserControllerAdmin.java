@@ -25,21 +25,21 @@ public class UserControllerAdmin {
             @RequestParam(required = false, defaultValue = "List.of()") List<Long> ids,
             @RequestParam(value = "from", required = false, defaultValue = "0") @Min(0) Integer from,
             @RequestParam(value = "size", required = false, defaultValue = "10") @Min(0) Integer size) {
-        System.out.println("");
+        System.out.println("\n");
         log.info("UserController.getUsersFromListIds:\nids:{}\nfrom{},size{}", ids, from, size);
         return userService.getAllUsers(ids, getPage(from, size));
     }
 
     @PostMapping
     public UserOutputDto addUser(@Valid @RequestBody UserInputDto userInputDto) {
-        System.out.println("");
+        System.out.println("\n");
         log.info("UserController.addUser: userInputDto{}", userInputDto);
         return userService.addUser(userInputDto);
     }
 
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable @Min(0) Long userId) {
-        System.out.println("");
+        System.out.println("\n");
         log.info("UserController.deleteUser: userId{}", userId);
         userService.deleteUser(userId);
     }

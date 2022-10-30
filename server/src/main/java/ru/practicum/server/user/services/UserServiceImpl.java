@@ -4,20 +4,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.practicum.server.exception.models.NotFoundException;
-import ru.practicum.server.user.models.User;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.server.user.models.userDtos.UserMapper;
 import ru.practicum.server.user.models.userDtos.UserInputDto;
 import ru.practicum.server.user.models.userDtos.UserOutputDto;
 import ru.practicum.server.user.repositories.UserRepository;
 import ru.practicum.server.utils.Validation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final Validation validation;
@@ -31,6 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserOutputDto addUser(UserInputDto userInputDto) {
         log.info("UserService.addUser start: userInputDto:{}.", userInputDto);
         UserOutputDto userOutputDto = UserMapper.toDto(userRepository.save(UserMapper.toUser(userInputDto)));
@@ -39,6 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long userId) {
         log.info("UserService.deleteUser start: userId:{}.", userId);
         validation.validateAndReturnUserByUserId(userId);

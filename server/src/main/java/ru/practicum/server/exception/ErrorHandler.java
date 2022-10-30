@@ -11,7 +11,6 @@ import ru.practicum.server.exception.models.NotFoundException;
 import ru.practicum.server.exception.models.ValidationException;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 
 import static ru.practicum.server.utils.FormatDate.FORMATTER;
@@ -31,6 +30,7 @@ public class ErrorHandler {
                 .timestamp(LocalDateTime.now().format(FORMATTER))
                 .build();
     }
+
     @ExceptionHandler(ValidationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse badRequest(ValidationException e) {

@@ -4,10 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.server.clientStatistics.models.EndpointDto;
 import ru.practicum.server.clientStatistics.models.ViewStats;
@@ -36,7 +33,8 @@ public class EventClient extends BaseClient {
     public Long getViews(Long eventId) {
         String url = "/stats?start={start}&end={end}&uris={uris}&unique={unique}";
         Map<String, Object> parameters = Map.of(
-                "start", URLEncoder.encode(LocalDateTime.now().minusYears(100).format(FORMATTER), StandardCharsets.UTF_8),
+                "start", URLEncoder.encode(LocalDateTime.now()
+                        .minusYears(100).format(FORMATTER), StandardCharsets.UTF_8),
                 "end", URLEncoder.encode(LocalDateTime.now().format(FORMATTER), StandardCharsets.UTF_8),
                 "uris", (List.of("/events/" + eventId)),
                 "unique", "false"

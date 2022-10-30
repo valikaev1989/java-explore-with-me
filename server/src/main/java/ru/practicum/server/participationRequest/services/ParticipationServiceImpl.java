@@ -3,6 +3,7 @@ package ru.practicum.server.participationRequest.services;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.server.event.model.Event;
 import ru.practicum.server.event.repositories.EventRepository;
 import ru.practicum.server.participationRequest.models.ParticipationDto.ParticipationRequestDto;
@@ -13,11 +14,14 @@ import ru.practicum.server.utils.Validation;
 
 import java.util.List;
 
-import static ru.practicum.server.participationRequest.models.ParticipationDto.ParticipationRequestMapper.requestDtoList;
-import static ru.practicum.server.participationRequest.models.ParticipationDto.ParticipationRequestMapper.toDtoRequest;
+import static ru.practicum.server.participationRequest.models
+        .ParticipationDto.ParticipationRequestMapper.requestDtoList;
+import static ru.practicum.server.participationRequest.models
+        .ParticipationDto.ParticipationRequestMapper.toDtoRequest;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ParticipationServiceImpl implements ParticipationService {
     private final ParticipationRepository participationRepository;
@@ -36,8 +40,10 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
+    @Transactional
     public ParticipationRequestDto addUserRequestParticipation(Long userId, Long eventId) {
-        log.info("ParticipationServiceImpl.addUserRequestParticipation start: userId: {}, eventId: {}", userId, eventId);
+        log.info("ParticipationServiceImpl.addUserRequestParticipation start: userId: {}, eventId: {}",
+                userId, eventId);
         Event event = validation.validateAndReturnEventByEventId(eventId);
         validation.validateAddParticipationRequest(userId, event);
         ParticipationRequest request = new ParticipationRequest();
@@ -54,8 +60,10 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
+    @Transactional
     public ParticipationRequestDto cancelUserRequestParticipation(Long userId, Long requestId) {
-        log.info("ParticipationServiceImpl.cancelUserRequestParticipation start: userId: {}, requestId :{}", userId, requestId);
+        log.info("ParticipationServiceImpl.cancelUserRequestParticipation start: userId: {}, requestId :{}",
+                userId, requestId);
         ParticipationRequest request = validation.validateAndReturnParticipationRequestByRequestId(requestId);
         validation.validateOwnerRequest(userId, request);
         request.setStatus(State.CANCELED);
@@ -77,6 +85,7 @@ public class ParticipationServiceImpl implements ParticipationService {
     }
 
     @Override
+    @Transactional
     public ParticipationRequestDto confirmParticipationRequest(Long userId, Long eventId, Long reqId) {
         log.info("ParticipationServiceImpl.confirmParticipationRequest start: userId: {}, eventId :{}, reqId: {}",
                 userId, eventId, reqId);
@@ -93,6 +102,7 @@ public class ParticipationServiceImpl implements ParticipationService {
 
 
     @Override
+    @Transactional
     public ParticipationRequestDto rejectParticipationRequest(Long userId, Long eventId, Long reqId) {
         log.info("ParticipationServiceImpl.rejectParticipationRequest start: userId: {}, eventId :{}, reqId: {}",
                 userId, eventId, reqId);

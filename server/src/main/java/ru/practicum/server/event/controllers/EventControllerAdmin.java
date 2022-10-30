@@ -35,7 +35,7 @@ public class EventControllerAdmin {
                 "rangeEnd", rangeEnd,
                 "from", from,
                 "size", size);
-        System.out.println("");
+        System.out.println("\n");
         log.info("EventControllerAdmin.getEventsByFilter:filter:");
         filter.forEach((key, value) -> log.info("{}:{}", key, value));
         return eventService.getEventsByFilterForAdmin(filter);
@@ -44,21 +44,21 @@ public class EventControllerAdmin {
     @PutMapping("/{eventId}")
     public EventFullDto updateEventFromAdmin(@PathVariable(value = "eventId") @Min(0) Long eventId,
                                              @RequestBody EventInputDto eventInputDto) {
-        System.out.println("");
+        System.out.println("\n");
         log.info("EventControllerAdmin.updateEvent: eventId{}, eventInputDto{}", eventId, eventInputDto);
         return eventService.updateEventFromAdmin(eventId, eventInputDto);
     }
 
     @PatchMapping("/{eventId}/publish")
     public EventFullDto publishEvent(@PathVariable(value = "eventId") @Min(0) Long eventId) {
-        System.out.println("");
+        System.out.println("\n");
         log.info("EventControllerAdmin.publishEvent: eventId:{}", eventId);
         return eventService.publishEvent(eventId);
     }
 
     @PatchMapping("/{eventId}/reject")
     public EventFullDto rejectEvent(@PathVariable(value = "eventId") @Min(0) Long eventId) {
-        System.out.println("");
+        System.out.println("\n");
         log.info("EventControllerAdmin.rejectEvent: eventId:{}", eventId);
         return eventService.rejectEvent(eventId);
     }

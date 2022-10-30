@@ -14,10 +14,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("select e from Event e where e.initiator.userId = ?1")
     List<Event> findAllByInitiator_UserId(Long userId, Pageable pageable);
 
-    /**
-     * Admin запрос получения событий по параметрам:
-     * "getAllByInitiator_UserIdInAndCategory_CategoryIdInAndStateInAndEventDateIsBetween"
-     */
     @Query("select e from Event e " +
             "where e.initiator.userId in ?1 " +
             "and e.category.categoryId in ?2 " +
@@ -28,10 +24,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                                  List<State> stateList, LocalDateTime rangeStart,
                                                  LocalDateTime rangeEnd, Pageable pageable);
 
-    /**
-     * Public запрос получения событий по параметрам:
-     * "getAllByStateAndCategory_CategoryIdInAndAnnotationContainsAndDescriptionContainsAndPaidAndEventDateBetween"
-     */
     @Query("select e from Event e " +
             "where e.state = ?1 " +
             "and e.category.categoryId in ?2 " +
@@ -42,7 +34,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             State state, List<Long> categoriesIds, String text, Boolean paid,
             LocalDateTime rangeStart, LocalDateTime rangeEnd, Pageable pageable);
 
-    //    List<Event> getAllByStateAndCategory_CategoryIdInAndAndPaid();
     @Query("select e from Event e where e.initiator.userId = ?1")
     Event getByAndInitiator_UserId(Long userId);
 }
