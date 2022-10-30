@@ -146,18 +146,18 @@ public class Validation {
     public List<Long> getCorrectCategoryIdList(List<Long> ids) {
         log.info("Validation.getCorrectCategoryIdList start: ids:");
         ids.forEach(id -> log.info("{}", id));
-        List<Long> CategoryIds = new ArrayList<>();
+        List<Long> categoryIds = new ArrayList<>();
         for (Long id : ids) {
             try {
                 Category category = validateAndReturnCategoryByCategoryId(id);
-                CategoryIds.add(category.getCategoryId());
+                categoryIds.add(category.getCategoryId());
             } catch (NotFoundException ex) {
                 log.warn(ex.getMessage());
             }
         }
         log.info("Validation.getCorrectCategoryIdList end: CategoryIds:");
-        CategoryIds.forEach(id -> log.info("{}", id));
-        return CategoryIds;
+        categoryIds.forEach(id -> log.info("{}", id));
+        return categoryIds;
     }
 
     public List<State> getCorrectStateList(List<String> states) {

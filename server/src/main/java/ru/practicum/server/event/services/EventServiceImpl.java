@@ -48,7 +48,7 @@ public class EventServiceImpl implements EventService {
         LocalDateTime rangeStart = convertRangeStart(filter.get("rangeStart"));
         LocalDateTime rangeEnd = convertRangeEnd(filter.get("rangeEnd"));
         Pageable pageable = getPage((Integer) filter.get("from"), (Integer) filter.get("size"));
-        List<EventFullDto> eventFullDtoList = EventMapper.ToFullDtoList(eventRepository
+        List<EventFullDto> eventFullDtoList = EventMapper.toFullDtoList(eventRepository
                 .getAllEventsByParametersForAdmin(
                         userIds, categoryIds, states, rangeStart, rangeEnd, pageable), eventClient);
         log.info("EventServiceImpl.getEventsByFilterForAdmin end eventFullDtoList:");
@@ -60,7 +60,7 @@ public class EventServiceImpl implements EventService {
     public List<EventFullDto> getAllEventsByInitiatorId(Long userId, Pageable page) {
         log.info("EventServiceImpl.getAllEventsByInitiatorId start: userId:{}, page:{}", userId, page);
         validation.validateAndReturnUserByUserId(userId);
-        List<EventFullDto> eventFullDtoList = EventMapper.ToFullDtoList(
+        List<EventFullDto> eventFullDtoList = EventMapper.toFullDtoList(
                 eventRepository.findAllByInitiator_UserId(userId, page), eventClient);
         log.info("EventServiceImpl.getAllEventsByInitiatorId end: eventFullDtoList:");
         if (eventFullDtoList != null) {
@@ -98,7 +98,7 @@ public class EventServiceImpl implements EventService {
                 validation.validateAndReturnCategoryByCategoryId(eventInputDto.getCategory()),
                 LocationMapper.toLocation(locationService.addLocation(eventInputDto.getLocation())),
                 eventInputDto);
-        EventFullDto eventFullDto = EventMapper.ToFullDto(eventRepository.save(event), eventClient);
+        EventFullDto eventFullDto = EventMapper.toFullDto(eventRepository.save(event), eventClient);
         log.info("EventServiceImpl.addEvent end: eventFullDto: {}", eventFullDto);
         return eventFullDto;
     }
@@ -108,7 +108,7 @@ public class EventServiceImpl implements EventService {
     public EventFullDto updateEventFromAdmin(Long eventId, EventInputDto eventInputDto) {
         log.info("EventServiceImpl.updateEventFromAdmin start: eventId:{}, eventInputDto:{}", eventId, eventInputDto);
         Event event = validation.validateAndReturnEventByEventId(eventId);
-        EventFullDto eventFullDto = EventMapper.ToFullDto(prepareForUpdateEvent(event, eventInputDto), eventClient);
+        EventFullDto eventFullDto = EventMapper.toFullDto(prepareForUpdateEvent(event, eventInputDto), eventClient);
         log.info("EventServiceImpl.updateEventFromAdmin end: eventFullDto{}", eventFullDto);
         return eventFullDto;
     }
@@ -125,7 +125,7 @@ public class EventServiceImpl implements EventService {
             event.setState(State.PENDING);
         }
         prepareForUpdateEvent(event, eventInputDto);
-        EventFullDto eventFullDto = EventMapper.ToFullDto(event, eventClient);
+        EventFullDto eventFullDto = EventMapper.toFullDto(event, eventClient);
         log.info("EventServiceImpl.updateEventFromInitiator end: eventFullDto{}", eventFullDto);
         return eventFullDto;
     }
@@ -136,7 +136,7 @@ public class EventServiceImpl implements EventService {
         validation.validateAndReturnUserByUserId(userId);
         Event event = validation.validateAndReturnEventByEventId(eventId);
         validation.validateForInitiatorEvent(userId, event);
-        EventFullDto eventFullDto = EventMapper.ToFullDto(event, eventClient);
+        EventFullDto eventFullDto = EventMapper.toFullDto(event, eventClient);
         log.info("EventServiceImpl.getEventByInitiatorId end: eventFullDto:{}", eventFullDto);
         return eventFullDto;
     }
@@ -146,7 +146,7 @@ public class EventServiceImpl implements EventService {
         log.info("EventServiceImpl.getEventByIdForPublic start: eventId:{}", eventId);
         Event event = validation.validateAndReturnEventByEventId(eventId);
         validation.validateForNotStatusPublished(event);
-        EventFullDto eventFullDto = EventMapper.ToFullDto(event, eventClient);
+        EventFullDto eventFullDto = EventMapper.toFullDto(event, eventClient);
         log.info("EventServiceImpl.getEventByIdForPublic end: eventFullDto:{}", eventFullDto);
         return eventFullDto;
     }
@@ -158,7 +158,7 @@ public class EventServiceImpl implements EventService {
         Event event = validation.validateAndReturnEventByEventId(eventId);
         validation.validateEventDateForPublish(event.getEventDate());
         event.setState(State.PUBLISHED);
-        EventFullDto eventFullDto = EventMapper.ToFullDto(eventRepository.save(event), eventClient);
+        EventFullDto eventFullDto = EventMapper.toFullDto(eventRepository.save(event), eventClient);
         log.info("EventServiceImpl.publishEvent end: eventFullDto:{}", eventFullDto);
         return eventFullDto;
     }
@@ -170,7 +170,7 @@ public class EventServiceImpl implements EventService {
         Event event = validation.validateAndReturnEventByEventId(eventId);
         validation.validateForStatusPending(event);
         event.setState(State.CANCELED);
-        EventFullDto eventFullDto = EventMapper.ToFullDto(eventRepository.save(event), eventClient);
+        EventFullDto eventFullDto = EventMapper.toFullDto(eventRepository.save(event), eventClient);
         log.info("EventServiceImpl.rejectEvent end: eventFullDto:{}", eventFullDto);
         return eventFullDto;
     }
@@ -183,7 +183,7 @@ public class EventServiceImpl implements EventService {
         validation.validateForStatusPending(event);
         validation.validateForInitiatorEvent(userId, event);
         event.setState(State.CANCELED);
-        EventFullDto eventFullDto = EventMapper.ToFullDto(eventRepository.save(event), eventClient);
+        EventFullDto eventFullDto = EventMapper.toFullDto(eventRepository.save(event), eventClient);
         log.info("EventServiceImpl.cancelEvent end: eventFullDto:{}", eventFullDto);
         return eventFullDto;
     }

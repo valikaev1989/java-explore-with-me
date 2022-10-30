@@ -8,7 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static ru.practicum.server.event.model.EventDtos.EventMapper.ToShortDtoList;
+import static ru.practicum.server.event.model.EventDtos.EventMapper.toShortDtoList;
+
 
 public class CompilationMapper {
 
@@ -25,7 +26,7 @@ public class CompilationMapper {
                 .id(compilation.getCompilationId())
                 .pinned(compilation.getPinned())
                 .title(compilation.getTitle())
-                .events(ToShortDtoList(compilation.getEventSet(), eventClient))
+                .events(toShortDtoList(compilation.getEventSet(), eventClient))
                 .build();
     }
 

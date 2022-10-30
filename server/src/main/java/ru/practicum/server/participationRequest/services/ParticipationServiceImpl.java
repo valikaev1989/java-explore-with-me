@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.server.event.model.Event;
 import ru.practicum.server.event.repositories.EventRepository;
 import ru.practicum.server.participationRequest.models.ParticipationDto.ParticipationRequestDto;
+import ru.practicum.server.participationRequest.models.ParticipationDto.ParticipationRequestMapper;
 import ru.practicum.server.participationRequest.models.ParticipationRequest;
 import ru.practicum.server.participationRequest.repositories.ParticipationRepository;
 import ru.practicum.server.utils.State;
@@ -14,10 +15,6 @@ import ru.practicum.server.utils.Validation;
 
 import java.util.List;
 
-import static ru.practicum.server.participationRequest.models
-        .ParticipationDto.ParticipationRequestMapper.requestDtoList;
-import static ru.practicum.server.participationRequest.models
-        .ParticipationDto.ParticipationRequestMapper.toDtoRequest;
 
 @Slf4j
 @Service
@@ -32,7 +29,7 @@ public class ParticipationServiceImpl implements ParticipationService {
     public List<ParticipationRequestDto> getUserRequestsParticipation(Long userId) {
         log.info("ParticipationServiceImpl.getUserRequestsParticipation start: userId: {}", userId);
         validation.validateAndReturnUserByUserId(userId);
-        List<ParticipationRequestDto> requestOutputDtos = requestDtoList(
+        List<ParticipationRequestDto> requestOutputDtos = ParticipationRequestMapper.requestDtoList(
                 participationRepository.getAllByUser_UserId(userId));
         log.info("ParticipationServiceImpl.getUserRequestsParticipation end: requestOutputDtos:");
         requestOutputDtos.forEach(requestDto -> log.info("requestDto: {}", requestDto));
@@ -50,7 +47,8 @@ public class ParticipationServiceImpl implements ParticipationService {
         request.setEvent(event);
         request.setUser(validation.validateAndReturnUserByUserId(userId));
         request.setStatus(event.getRequestModeration() ? State.PENDING : State.CONFIRMED);
-        ParticipationRequestDto requestDto = toDtoRequest(participationRepository.save(request));
+        ParticipationRequestDto requestDto = ParticipationRequestMapper
+                .toDtoRequest(participationRepository.save(request));
         if (requestDto.getStatus().equals(State.CONFIRMED.toString())) {
             event.setConfirmedRequests(event.getConfirmedRequests() + 1);
             eventRepository.save(event);
@@ -67,7 +65,8 @@ public class ParticipationServiceImpl implements ParticipationService {
         ParticipationRequest request = validation.validateAndReturnParticipationRequestByRequestId(requestId);
         validation.validateOwnerRequest(userId, request);
         request.setStatus(State.CANCELED);
-        ParticipationRequestDto requestDto = toDtoRequest(participationRepository.save(request));
+        ParticipationRequestDto requestDto = ParticipationRequestMapper
+                .toDtoRequest(participationRepository.save(request));
         log.info("ParticipationServiceImpl.cancelUserRequestParticipation end: requestDto:{}", requestDto);
         return requestDto;
     }
@@ -77,8 +76,9 @@ public class ParticipationServiceImpl implements ParticipationService {
         log.info("ParticipationServiceImpl.getOwnerEventRequests start: userId: {}, eventId :{}", userId, eventId);
         validation.validateAndReturnUserByUserId(userId);
         validation.validateAndReturnEventByEventId(eventId);
-        List<ParticipationRequestDto> requestDtoList = requestDtoList(participationRepository
-                .getOwnerEventRequests(userId, eventId));
+        List<ParticipationRequestDto> requestDtoList = ParticipationRequestMapper
+                .requestDtoList(participationRepository
+                        .getOwnerEventRequests(userId, eventId));
         log.info("ParticipationServiceImpl.getOwnerEventRequests end: requestDtoList:");
         requestDtoList.forEach(requestDto -> log.info("requestDto: {}", requestDtoList));
         return requestDtoList;
@@ -95,7 +95,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         confirmedOrRejectedForRequest(event, request);
         addConfirmRequestInEvent(event, request);
         rejectedOtherRequests(event);
-        ParticipationRequestDto requestDto = toDtoRequest(request);
+        ParticipationRequestDto requestDto = ParticipationRequestMapper.toDtoRequest(request);
         log.info("ParticipationServiceImpl.confirmParticipationRequest end: requestDto:{}", requestDto);
         return requestDto;
     }
@@ -110,7 +110,8 @@ public class ParticipationServiceImpl implements ParticipationService {
         validation.validateForInitiatorEvent(userId, event);
         ParticipationRequest request = validation.validateAndReturnParticipationRequestByRequestId(reqId);
         request.setStatus(State.REJECTED);
-        ParticipationRequestDto requestDto = toDtoRequest(participationRepository.save(request));
+        ParticipationRequestDto requestDto = ParticipationRequestMapper
+                .toDtoRequest(participationRepository.save(request));
         log.info("ParticipationServiceImpl.rejectParticipationRequest end: requestDto:{}", requestDto);
         return requestDto;
     }

@@ -42,7 +42,7 @@ public class EventMapper {
                 .build();
     }
 
-    public static EventFullDto ToFullDto(Event event, EventClient eventClient) {
+    public static EventFullDto toFullDto(Event event, EventClient eventClient) {
         EventFullDto eventFullDto = EventFullDto.builder()
                 .id(event.getEventId())
                 .annotation(event.getAnnotation())
@@ -80,11 +80,11 @@ public class EventMapper {
                 .build();
     }
 
-    public static List<EventFullDto> ToFullDtoList(List<Event> userEvents, EventClient eventClient) {
-        return userEvents.stream().map((Event event) -> ToFullDto(event, eventClient)).collect(Collectors.toList());
+    public static List<EventFullDto> toFullDtoList(List<Event> userEvents, EventClient eventClient) {
+        return userEvents.stream().map((Event event) -> toFullDto(event, eventClient)).collect(Collectors.toList());
     }
 
-    public static List<EventShortDto> ToShortDtoList(Set<Event> events, EventClient eventClient) {
+    public static List<EventShortDto> toShortDtoList(Set<Event> events, EventClient eventClient) {
         return events.stream().map((Event event) -> toShortDto(event, eventClient)).collect(Collectors.toList());
     }
 }
