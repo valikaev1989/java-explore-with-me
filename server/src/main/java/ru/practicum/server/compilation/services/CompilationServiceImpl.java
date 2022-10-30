@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import ru.practicum.server.clientStatistics.EventClient;
 import ru.practicum.server.compilation.models.Compilation;
 import ru.practicum.server.compilation.models.compilationDto.CompilationInputDto;
 import ru.practicum.server.compilation.models.compilationDto.CompilationOutputDto;
@@ -22,12 +23,13 @@ import static ru.practicum.server.compilation.models.compilationDto.CompilationM
 public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
     private final Validation validation;
+    private final EventClient eventClient;
 
     @Override
     public List<CompilationOutputDto> getCompilations(Boolean pinned, Pageable page) {
         log.info("CompilationServiceImpl.getCompilations start pinned: {}, page:{}", pinned, page);
         List<CompilationOutputDto> compilationOutputDtoList = getCompilationList(compilationRepository
-                .getAllByPinned(pinned, page));
+                .getAllByPinned(pinned, page),eventClient);
         log.info("CompilationServiceImpl.getCompilations end List:");
         compilationOutputDtoList.forEach(this::logCompilationOutputDto);
         return compilationOutputDtoList;
@@ -39,7 +41,7 @@ public class CompilationServiceImpl implements CompilationService {
         Set<Event> events = validation.getCorrectEventsSet(compilationInputDto.getEvents());
         Compilation compilation = toCompilation(compilationInputDto, events);
         Compilation result = compilationRepository.save(compilation);
-        CompilationOutputDto compilationOutputDto = toCompilationDto(result);
+        CompilationOutputDto compilationOutputDto = toCompilationDto(result,eventClient);
         log.info("CompilationServiceImpl.addCompilation end:");
         logCompilationOutputDto(compilationOutputDto);
         return compilationOutputDto;
@@ -49,7 +51,7 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationOutputDto getCompilationById(Long compId) {
         log.info("CompilationServiceImpl.getCompilationById start compId: {}", compId);
         CompilationOutputDto compilationOutputDto = toCompilationDto(validation
-                .validateAndReturnCompilationByCompilationId(compId));
+                .validateAndReturnCompilationByCompilationId(compId),eventClient);
         log.info("CompilationServiceImpl.getCompilationById end:");
         logCompilationOutputDto(compilationOutputDto);
         return compilationOutputDto;

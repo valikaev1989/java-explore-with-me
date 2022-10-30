@@ -3,6 +3,7 @@ package ru.practicum.server.event.model.EventDtos;
 import lombok.RequiredArgsConstructor;
 import ru.practicum.server.category.model.Category;
 import ru.practicum.server.category.model.categoryDtos.CategoryMapper;
+import ru.practicum.server.clientStatistics.EventClient;
 import ru.practicum.server.event.model.Event;
 import ru.practicum.server.location.models.Location;
 import ru.practicum.server.location.models.LocationDtos.LocationMapper;
@@ -16,7 +17,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static ru.practicum.server.utils.FormatDate.FORMATTER;
-
 @RequiredArgsConstructor
 public class EventMapper {
 
@@ -41,7 +41,7 @@ public class EventMapper {
                 .build();
     }
 
-    public static EventFullDto ToFullDto(Event event) {
+    public static EventFullDto ToFullDto(Event event, EventClient eventClient) {
         EventFullDto eventFullDto = EventFullDto.builder()
                 .id(event.getEventId())
                 .annotation(event.getAnnotation())
@@ -57,7 +57,7 @@ public class EventMapper {
                 .requestModeration(event.getRequestModeration())
                 .state(event.getState())
                 .title(event.getTitle())
-                .views(0)
+                .views(eventClient.getViews(event.getEventId()))
                 .build();
         if (event.getPublishedOn() != null) {
             eventFullDto.setPublishedOn(event.getPublishedOn().format(FORMATTER));
@@ -65,7 +65,7 @@ public class EventMapper {
         return eventFullDto;
     }
 
-    public static EventShortDto toShortDto(Event event) {
+    public static EventShortDto toShortDto(Event event, EventClient eventClient) {
         return EventShortDto.builder()
                 .id(event.getEventId())
                 .annotation(event.getAnnotation())
@@ -75,15 +75,15 @@ public class EventMapper {
                 .initiator(UserMapper.toDto(event.getInitiator()))
                 .paid(event.getPaid())
                 .title(event.getTitle())
-                .views(event.getViews())
+                .views(eventClient.getViews(event.getEventId()))
                 .build();
     }
 
-    public static List<EventFullDto> ToFullDtoList(List<Event> userEvents) {
-        return userEvents.stream().map(EventMapper::ToFullDto).collect(Collectors.toList());
+    public static List<EventFullDto> ToFullDtoList(List<Event> userEvents, EventClient eventClient) {
+        return userEvents.stream().map((Event event) -> ToFullDto(event,eventClient)).collect(Collectors.toList());
     }
 
-    public static List<EventShortDto> ToShortDtoList(Set<Event> events) {
-        return events.stream().map(EventMapper::toShortDto).collect(Collectors.toList());
+    public static List<EventShortDto> ToShortDtoList(Set<Event> events, EventClient eventClient) {
+        return events.stream().map((Event event) -> toShortDto(event,eventClient)).collect(Collectors.toList());
     }
 }
