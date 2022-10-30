@@ -15,7 +15,7 @@
 Функционал приложения:
 -
 Front-end приложения:
-![web](web.png)
+![web](media/web.png)
 
 
 
