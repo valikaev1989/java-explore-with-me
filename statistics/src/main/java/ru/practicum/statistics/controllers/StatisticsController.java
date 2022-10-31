@@ -7,10 +7,7 @@ import ru.practicum.statistics.models.dto.EndpointDto;
 import ru.practicum.statistics.models.dto.ViewStats;
 import ru.practicum.statistics.services.StatisticsService;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -33,13 +30,6 @@ public class StatisticsController {
             @RequestParam(value = "unique", required = false, defaultValue = "false") Boolean unique) {
         log.info("StatisticsController.getViewStats:start: {}, end: {},uris: {}, unique: {}",
                 start, end, uris, unique);
-//        Map<String, Object> parameters = Map.of(
-//                "start", URLDecoder.decode(start, StandardCharsets.UTF_8),
-//                "end", URLDecoder.decode(end, StandardCharsets.UTF_8),
-//                "uris", uris,
-//                "unique", unique
-//        );
-//        parameters.forEach((key, value) -> log.info("{}: {}", key, value));
         return statisticsService.getViewStats(start, end, uris, unique);
     }
 }

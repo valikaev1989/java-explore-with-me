@@ -10,7 +10,6 @@ import ru.practicum.statistics.repositories.StatisticsRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 import static ru.practicum.statistics.models.dto.StatsMapper.toEndpointDto;
 import static ru.practicum.statistics.models.dto.StatsMapper.toEndpointHit;
