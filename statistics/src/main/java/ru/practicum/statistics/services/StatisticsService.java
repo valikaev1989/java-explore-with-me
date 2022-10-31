@@ -9,5 +9,5 @@ import java.util.Map;
 public interface StatisticsService {
     EndpointDto addEndpointHit(EndpointDto endpointDto);
 
-    List<ViewStats> getViewStats(Map<String, Object> parameters);
+    List<ViewStats> getViewStats(String start, String end,List<String> uris, Boolean unique);
 }

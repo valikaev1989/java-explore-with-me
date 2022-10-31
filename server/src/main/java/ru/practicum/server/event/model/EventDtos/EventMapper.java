@@ -39,6 +39,7 @@ public class EventMapper {
                 .requestModeration(eventInputDto.getRequestModeration())
                 .title(eventInputDto.getTitle())
                 .state(State.valueOf(eventInputDto.getState()))
+                .views(0)
                 .build();
     }
 

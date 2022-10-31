@@ -25,7 +25,7 @@ import static ru.practicum.server.compilation.models.compilationDto.CompilationM
 @RequiredArgsConstructor
 public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
-    private final CompilationValidator validator;
+    private final CompilationValidator compilationValidator;
     private final EventValidator eventValidator;
     private final EventClient eventClient;
 
@@ -55,8 +55,10 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public CompilationOutputDto getCompilationById(Long compId) {
         log.info("CompilationServiceImpl.getCompilationById start compId: {}", compId);
-        CompilationOutputDto compilationOutputDto = toCompilationDto(validator
-                .validateAndReturnCompilationByCompilationId(compId), eventClient);
+        Compilation compilation = compilationValidator
+                .validateAndReturnCompilationByCompilationId(compId);
+        System.out.println(compilation);
+        CompilationOutputDto compilationOutputDto = toCompilationDto(compilation, eventClient);
         log.info("CompilationServiceImpl.getCompilationById end:");
         logCompilationOutputDto(compilationOutputDto);
         return compilationOutputDto;
@@ -66,7 +68,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     public void deleteCompilation(Long compId) {
         log.info("CompilationServiceImpl.deleteCompilation start compId: {}", compId);
-        compilationRepository.delete(validator.validateAndReturnCompilationByCompilationId(compId));
+        compilationRepository.delete(compilationValidator.validateAndReturnCompilationByCompilationId(compId));
         log.info("CompilationServiceImpl.deleteCompilation end compId: {}", compId);
     }
 
@@ -74,29 +76,29 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     public void pinCompilation(Long compId) {
         log.info("CompilationServiceImpl.pinCompilation start compId: {}", compId);
-        Compilation compilation = validator.validateAndReturnCompilationByCompilationId(compId);
+        Compilation compilation = compilationValidator.validateAndReturnCompilationByCompilationId(compId);
         compilation.setPinned(true);
         compilationRepository.save(compilation);
         log.info("CompilationServiceImpl.pinCompilation end:");
-        logCompilation(validator.validateAndReturnCompilationByCompilationId(compId));
+        logCompilation(compilationValidator.validateAndReturnCompilationByCompilationId(compId));
     }
 
     @Override
     @Transactional
     public void unpinCompilation(Long compId) {
         log.info("CompilationServiceImpl.unpinCompilation start compId: {}", compId);
-        Compilation compilation = validator.validateAndReturnCompilationByCompilationId(compId);
+        Compilation compilation = compilationValidator.validateAndReturnCompilationByCompilationId(compId);
         compilation.setPinned(false);
         compilationRepository.save(compilation);
         log.info("CompilationServiceImpl.unpinCompilation end:");
-        logCompilation(validator.validateAndReturnCompilationByCompilationId(compId));
+        logCompilation(compilationValidator.validateAndReturnCompilationByCompilationId(compId));
     }
 
     @Override
     @Transactional
     public void deleteEventFromCompilation(Long compId, Long eventId) {
         log.info("CompilationServiceImpl.deleteEventFromCompilation start compId: {}, eventId: {}", compId, eventId);
-        Compilation compilation = validator.validateAndReturnCompilationByCompilationId(compId);
+        Compilation compilation = compilationValidator.validateAndReturnCompilationByCompilationId(compId);
         compilation.getEventSet().removeIf(event -> event.getEventId().equals(eventId));
         compilationRepository.save(compilation);
         log.info("CompilationServiceImpl.deleteEventFromCompilation end. " +
@@ -107,11 +109,11 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     public void addEventToCompilation(Long compId, Long eventId) {
         log.info("CompilationServiceImpl.unpinCompilation start compId: {}", compId);
-        Compilation compilation = validator.validateAndReturnCompilationByCompilationId(compId);
+        Compilation compilation = compilationValidator.validateAndReturnCompilationByCompilationId(compId);
         compilation.getEventSet().add(eventValidator.validateAndReturnEventByEventId(eventId));
         compilationRepository.save(compilation);
         log.info("CompilationServiceImpl.addEventToCompilation end compilation:");
-        logCompilation(validator.validateAndReturnCompilationByCompilationId(compId));
+        logCompilation(compilationValidator.validateAndReturnCompilationByCompilationId(compId));
     }
 
     private void logCompilationOutputDto(CompilationOutputDto compilationOutputDto) {

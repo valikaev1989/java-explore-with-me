@@ -31,14 +31,15 @@ public class StatisticsController {
             @RequestParam(value = "end", required = false) String end,
             @RequestParam(value = "uris", required = false, defaultValue = "List.of()") List<String> uris,
             @RequestParam(value = "unique", required = false, defaultValue = "false") Boolean unique) {
-        log.info("StatisticsController.getViewStats:");
-        Map<String, Object> parameters = Map.of(
-                "start", URLDecoder.decode(start, StandardCharsets.UTF_8),
-                "end", URLDecoder.decode(end, StandardCharsets.UTF_8),
-                "uris", uris,
-                "unique", unique
-        );
-        parameters.forEach((key, value) -> log.info("{}: {}", key, value));
-        return statisticsService.getViewStats(parameters);
+        log.info("StatisticsController.getViewStats:start: {}, end: {},uris: {}, unique: {}",
+                start, end, uris, unique);
+//        Map<String, Object> parameters = Map.of(
+//                "start", URLDecoder.decode(start, StandardCharsets.UTF_8),
+//                "end", URLDecoder.decode(end, StandardCharsets.UTF_8),
+//                "uris", uris,
+//                "unique", unique
+//        );
+//        parameters.forEach((key, value) -> log.info("{}: {}", key, value));
+        return statisticsService.getViewStats(start, end, uris, unique);
     }
 }

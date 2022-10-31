@@ -37,19 +37,19 @@ public class CompilationControllerAdmin {
 
     @DeleteMapping("/{compId}/pin")
     public void unpinCompilation(@PathVariable @Min(0) Long compId) {
-        log.info("CompilationControllerAdmin.toUnfixCompilation compId:{}", compId);
+        log.info("\nCompilationControllerAdmin.toUnfixCompilation compId:{}", compId);
         compilationService.unpinCompilation(compId);
     }
 
     @DeleteMapping("/{compId}/events/{eventId}")
     public void deleteEventFromCompilation(@PathVariable @Min(0) Long compId, @PathVariable @Min(0) Long eventId) {
-        log.info("CompilationControllerAdmin.deleteEventFromCompilation compId:{}, eventId:{}", compId, eventId);
+        log.info("\nCompilationControllerAdmin.deleteEventFromCompilation compId:{}, eventId:{}", compId, eventId);
         compilationService.deleteEventFromCompilation(compId, eventId);
     }
 
     @PatchMapping("/{compId}/events/{eventId}")
     public void addEventToCompilation(@PathVariable @Min(0) Long compId, @PathVariable @Min(0) Long eventId) {
-        log.info("CompilationControllerAdmin.addEventInCompilation compId:{}, eventId:{}", compId, eventId);
+        log.info("\nCompilationControllerAdmin.addEventInCompilation compId:{}, eventId:{}", compId, eventId);
         compilationService.addEventToCompilation(compId, eventId);
     }
 }

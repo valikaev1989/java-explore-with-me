@@ -19,12 +19,11 @@ import static ru.practicum.statistics.utils.FormatDate.convertRangeStart;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class StatisticsServiceImpl implements StatisticsService {
     private final StatisticsRepository statisticsRepository;
 
-    @Transactional
     @Override
     public EndpointDto addEndpointHit(EndpointDto endpointDto) {
         log.info("StatisticsServiceImpl.addEndpointHit start:");
@@ -34,20 +33,18 @@ public class StatisticsServiceImpl implements StatisticsService {
     }
 
     @Override
-    public List<ViewStats> getViewStats(Map<String, Object> parameters) {
-        log.info("StatisticsServiceImpl.getViewStats start: parameters: {}", parameters);
-        parameters.forEach((key, value) -> log.info("{}: {}", key, value));
-        LocalDateTime start = convertRangeStart(parameters.get("start"));
-        LocalDateTime end = convertRangeEnd(parameters.get("end"));
-        List<String> uris = (List<String>) parameters.get("uris");
-        Boolean unique = (Boolean) parameters.get("unique");
+    public List<ViewStats> getViewStats(String start, String end,List<String> uris, Boolean unique) {
+        log.info("StatisticsServiceImpl.getViewStats: start: {}, end: {},uris: {}, unique: {}",
+                start, end, uris, unique);
+        LocalDateTime start1 = convertRangeStart(start);
+        LocalDateTime end1 = convertRangeEnd(end);
         List<ViewStats> viewStats;
         if (uris.isEmpty()) {
-            viewStats = (unique ? statisticsRepository.getStatsUniqueByTime(start, end)
-                    : statisticsRepository.getAllStatsByTime(start, end));
+            viewStats = (unique ? statisticsRepository.getStatsUniqueByTime(start1, end1)
+                    : statisticsRepository.getAllStatsByTime(start1, end1));
         } else {
-            viewStats = (unique ? statisticsRepository.getStatsUniqueByTimeAndUris(start, end, uris)
-                    : statisticsRepository.getStatsByTimeAndUris(start, end, uris));
+            viewStats = (unique ? statisticsRepository.getStatsUniqueByTimeAndUris(start1, end1, uris)
+                    : statisticsRepository.getStatsByTimeAndUris(start1, end1, uris));
         }
         log.info("StatisticsServiceImpl.addEndpointHit end: viewStatsList:");
         viewStats.forEach(viewStat -> log.info("viewStat: {}", viewStat));

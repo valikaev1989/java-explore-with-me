@@ -160,6 +160,7 @@ public class EventServiceImpl implements EventService {
         Event event = eventValidator.validateAndReturnEventByEventId(eventId);
         eventValidator.validateEventDateForPublish(event.getEventDate());
         event.setState(State.PUBLISHED);
+        event.setPublishedOn(LocalDateTime.now());
         EventFullDto eventFullDto = EventMapper.toFullDto(eventRepository.save(event), eventClient);
         log.info("EventServiceImpl.publishEvent end: eventFullDto:{}", eventFullDto);
         return eventFullDto;

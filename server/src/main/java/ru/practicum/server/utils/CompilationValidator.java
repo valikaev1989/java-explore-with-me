@@ -11,7 +11,7 @@ import ru.practicum.server.exception.models.NotFoundException;
 @Component
 @RequiredArgsConstructor
 public class CompilationValidator {
-    CompilationRepository compilationRepository;
+    private final CompilationRepository compilationRepository;
 
     public Compilation validateAndReturnCompilationByCompilationId(Long compilationId) {
         return compilationRepository.findById(compilationId).orElseThrow(() ->
