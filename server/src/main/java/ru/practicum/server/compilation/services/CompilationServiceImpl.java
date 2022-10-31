@@ -13,7 +13,6 @@ import ru.practicum.server.compilation.repositories.CompilationRepository;
 import ru.practicum.server.event.model.Event;
 import ru.practicum.server.utils.CompilationValidator;
 import ru.practicum.server.utils.EventValidator;
-import ru.practicum.server.utils.Validation;
 
 import java.util.List;
 import java.util.Set;
