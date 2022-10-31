@@ -11,6 +11,8 @@ import ru.practicum.server.compilation.models.compilationDto.CompilationInputDto
 import ru.practicum.server.compilation.models.compilationDto.CompilationOutputDto;
 import ru.practicum.server.compilation.repositories.CompilationRepository;
 import ru.practicum.server.event.model.Event;
+import ru.practicum.server.utils.CompilationValidator;
+import ru.practicum.server.utils.EventValidator;
 import ru.practicum.server.utils.Validation;
 
 import java.util.List;
@@ -24,7 +26,8 @@ import static ru.practicum.server.compilation.models.compilationDto.CompilationM
 @RequiredArgsConstructor
 public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
-    private final Validation validation;
+    private final CompilationValidator validator;
+    private final EventValidator eventValidator;
     private final EventClient eventClient;
 
     @Override
@@ -41,7 +44,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     public CompilationOutputDto addCompilation(CompilationInputDto compilationInputDto) {
         log.info("CompilationServiceImpl.addCompilation start compilationInputDto: {}", compilationInputDto);
-        Set<Event> events = validation.getCorrectEventsSet(compilationInputDto.getEvents());
+        Set<Event> events = eventValidator.getCorrectEventsSet(compilationInputDto.getEvents());
         Compilation compilation = toCompilation(compilationInputDto, events);
         Compilation result = compilationRepository.save(compilation);
         CompilationOutputDto compilationOutputDto = toCompilationDto(result, eventClient);
@@ -53,7 +56,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public CompilationOutputDto getCompilationById(Long compId) {
         log.info("CompilationServiceImpl.getCompilationById start compId: {}", compId);
-        CompilationOutputDto compilationOutputDto = toCompilationDto(validation
+        CompilationOutputDto compilationOutputDto = toCompilationDto(validator
                 .validateAndReturnCompilationByCompilationId(compId), eventClient);
         log.info("CompilationServiceImpl.getCompilationById end:");
         logCompilationOutputDto(compilationOutputDto);
@@ -64,7 +67,7 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     public void deleteCompilation(Long compId) {
         log.info("CompilationServiceImpl.deleteCompilation start compId: {}", compId);
-        compilationRepository.delete(validation.validateAndReturnCompilationByCompilationId(compId));
+        compilationRepository.delete(validator.validateAndReturnCompilationByCompilationId(compId));
         log.info("CompilationServiceImpl.deleteCompilation end compId: {}", compId);
     }
 
@@ -72,44 +75,44 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     public void pinCompilation(Long compId) {
         log.info("CompilationServiceImpl.pinCompilation start compId: {}", compId);
-        Compilation compilation = validation.validateAndReturnCompilationByCompilationId(compId);
+        Compilation compilation = validator.validateAndReturnCompilationByCompilationId(compId);
         compilation.setPinned(true);
         compilationRepository.save(compilation);
         log.info("CompilationServiceImpl.pinCompilation end:");
-        logCompilation(validation.validateAndReturnCompilationByCompilationId(compId));
+        logCompilation(validator.validateAndReturnCompilationByCompilationId(compId));
     }
 
     @Override
     @Transactional
     public void unpinCompilation(Long compId) {
         log.info("CompilationServiceImpl.unpinCompilation start compId: {}", compId);
-        Compilation compilation = validation.validateAndReturnCompilationByCompilationId(compId);
+        Compilation compilation = validator.validateAndReturnCompilationByCompilationId(compId);
         compilation.setPinned(false);
         compilationRepository.save(compilation);
         log.info("CompilationServiceImpl.unpinCompilation end:");
-        logCompilation(validation.validateAndReturnCompilationByCompilationId(compId));
+        logCompilation(validator.validateAndReturnCompilationByCompilationId(compId));
     }
 
     @Override
     @Transactional
     public void deleteEventFromCompilation(Long compId, Long eventId) {
         log.info("CompilationServiceImpl.deleteEventFromCompilation start compId: {}, eventId: {}", compId, eventId);
-        Compilation compilation = validation.validateAndReturnCompilationByCompilationId(compId);
+        Compilation compilation = validator.validateAndReturnCompilationByCompilationId(compId);
         compilation.getEventSet().removeIf(event -> event.getEventId().equals(eventId));
-        System.out.println(compilation.getEventSet());
         compilationRepository.save(compilation);
-        log.info("CompilationServiceImpl.deleteEventFromCompilation end");
+        log.info("CompilationServiceImpl.deleteEventFromCompilation end. " +
+                "delete event with id: {}, in compilation with id: {}.", eventId, compilation);
     }
 
     @Override
     @Transactional
     public void addEventToCompilation(Long compId, Long eventId) {
         log.info("CompilationServiceImpl.unpinCompilation start compId: {}", compId);
-        Compilation compilation = validation.validateAndReturnCompilationByCompilationId(compId);
-        compilation.getEventSet().add(validation.validateAndReturnEventByEventId(eventId));
+        Compilation compilation = validator.validateAndReturnCompilationByCompilationId(compId);
+        compilation.getEventSet().add(eventValidator.validateAndReturnEventByEventId(eventId));
         compilationRepository.save(compilation);
         log.info("CompilationServiceImpl.addEventToCompilation end compilation:");
-        logCompilation(validation.validateAndReturnCompilationByCompilationId(compId));
+        logCompilation(validator.validateAndReturnCompilationByCompilationId(compId));
     }
 
     private void logCompilationOutputDto(CompilationOutputDto compilationOutputDto) {

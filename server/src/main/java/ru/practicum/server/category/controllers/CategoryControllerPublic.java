@@ -21,14 +21,12 @@ public class CategoryControllerPublic {
     public List<CategoryDto> getAllCategory(
             @RequestParam(value = "from", required = false, defaultValue = "0") @Min(0) Integer from,
             @RequestParam(value = "size", required = false, defaultValue = "10") @Min(0) Integer size) {
-        System.out.println("\n");
         log.info("CategoryControllerPublic.getAllCategory from={}, size={}", from, size);
         return categoryService.getAllCategories(FormatPage.getPage(from, size));
     }
 
     @GetMapping("/{catId}")
     public CategoryDto getCategoryById(@PathVariable @Min(0) Long catId) {
-        System.out.println("\n");
         log.info("CategoryControllerPublic.getCategoryById catId={}", catId);
         return categoryService.getCategoryById(catId);
     }

@@ -9,7 +9,7 @@ import ru.practicum.server.user.models.userDtos.UserMapper;
 import ru.practicum.server.user.models.userDtos.UserInputDto;
 import ru.practicum.server.user.models.userDtos.UserOutputDto;
 import ru.practicum.server.user.repositories.UserRepository;
-import ru.practicum.server.utils.Validation;
+import ru.practicum.server.utils.UserValidator;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final Validation validation;
+    private final UserValidator validator;
 
     @Override
     public List<UserOutputDto> getAllUsers(List<Long> ids, Pageable page) {
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUser(Long userId) {
         log.info("UserService.deleteUser start: userId:{}.", userId);
-        validation.validateAndReturnUserByUserId(userId);
+        validator.validateAndReturnUserByUserId(userId);
         userRepository.deleteById(userId);
         log.info("UserService.deleteUser end userId:{}.", userId);
     }
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
             return UserMapper.toDtoUsers(userRepository.findAll(pageable));
         } else {
             return UserMapper.toDtoUsers(
-                    userRepository.findUserByUserIdIn(validation.getCorrectUserIdList(ids), pageable));
+                    userRepository.findUserByUserIdIn(validator.getCorrectUserIdList(ids), pageable));
         }
     }
 }

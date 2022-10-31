@@ -11,12 +11,11 @@ import ru.practicum.server.event.model.EventDtos.EventFullDto;
 import ru.practicum.server.event.model.EventDtos.EventInputDto;
 import ru.practicum.server.event.model.EventDtos.EventMapper;
 import ru.practicum.server.event.model.EventDtos.EventShortDto;
-import ru.practicum.server.utils.State;
+import ru.practicum.server.utils.*;
 import ru.practicum.server.event.repositories.EventRepository;
 import ru.practicum.server.exception.models.ValidationException;
 import ru.practicum.server.location.models.LocationDtos.LocationMapper;
 import ru.practicum.server.location.services.LocationServiceImpl;
-import ru.practicum.server.utils.Validation;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -36,15 +35,19 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository;
     private final LocationServiceImpl locationService;
-    private final Validation validation;
+    private final UserValidator userValidator;
+    private final EventValidator eventValidator;
+    private final CategoryValidator categoryValidator;
     private final EventClient eventClient;
+    private final StateValidator stateValidator;
 
     @Override
     public List<EventFullDto> getEventsByFilterForAdmin(Map<String, Object> filter) {
-        log.info("EventServiceImpl.getEventsByFilterForAdmin start");
-        List<Long> userIds = validation.getCorrectUserIdList((List<Long>) filter.get("users"));
-        List<State> states = validation.getCorrectStateList((List<String>) filter.get("states"));
-        List<Long> categoryIds = validation.getCorrectCategoryIdList((List<Long>) filter.get("categories"));
+        log.info("EventServiceImpl.getEventsByFilterForAdmin start filter:");
+        filter.forEach((key, value) -> log.info("{}:{}", key, value));
+        List<Long> userIds = userValidator.getCorrectUserIdList((List<Long>) filter.get("users"));
+        List<State> states = stateValidator.getCorrectStateList((List<String>) filter.get("states"));
+        List<Long> categoryIds = categoryValidator.getCorrectCategoryIdList((List<Long>) filter.get("categories"));
         LocalDateTime rangeStart = convertRangeStart(filter.get("rangeStart"));
         LocalDateTime rangeEnd = convertRangeEnd(filter.get("rangeEnd"));
         Pageable pageable = getPage((Integer) filter.get("from"), (Integer) filter.get("size"));
@@ -59,21 +62,20 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<EventFullDto> getAllEventsByInitiatorId(Long userId, Pageable page) {
         log.info("EventServiceImpl.getAllEventsByInitiatorId start: userId:{}, page:{}", userId, page);
-        validation.validateAndReturnUserByUserId(userId);
+        userValidator.validateAndReturnUserByUserId(userId);
         List<EventFullDto> eventFullDtoList = EventMapper.toFullDtoList(
                 eventRepository.findAllByInitiator_UserId(userId, page), eventClient);
         log.info("EventServiceImpl.getAllEventsByInitiatorId end: eventFullDtoList:");
-        if (eventFullDtoList != null) {
-            eventFullDtoList.forEach(eventFullDto -> log.info("eventFullDto:{}", eventFullDto));
-        }
+        eventFullDtoList.forEach(eventFullDto -> log.info("eventFullDto:{}", eventFullDto));
         return eventFullDtoList;
     }
 
     @Override
     public List<EventShortDto> getAllEventsForPublic(Map<String, Object> filter) {
-        log.info("EventServiceImpl.getAllEventsForPublic start");
+        log.info("EventServiceImpl.getAllEventsForPublic start: filter:");
+        filter.forEach((key, value) -> log.info("{}:{}", key, value));
         String text = (String) filter.get("text");
-        List<Long> categoryIds = validation.getCorrectCategoryIdList((List<Long>) filter.get("categories"));
+        List<Long> categoryIds = categoryValidator.getCorrectCategoryIdList((List<Long>) filter.get("categories"));
         Boolean paid = (Boolean) filter.get("paid");
         LocalDateTime rangeStart = convertRangeStart(filter.get("rangeStart"));
         LocalDateTime rangeEnd = convertRangeEnd(filter.get("rangeEnd"));
@@ -92,10 +94,10 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto addEvent(Long userId, EventInputDto eventInputDto) {
         log.info("EventServiceImpl.addEvent start: userId: {}, eventInputDto: {}", userId, eventInputDto);
-        validation.validateEventDateAddEvent(LocalDateTime.parse(eventInputDto.getEventDate(), FORMATTER));
+        eventValidator.validateEventDateAddEvent(LocalDateTime.parse(eventInputDto.getEventDate(), FORMATTER));
         Event event = EventMapper.toEvent(
-                validation.validateAndReturnUserByUserId(userId),
-                validation.validateAndReturnCategoryByCategoryId(eventInputDto.getCategory()),
+                userValidator.validateAndReturnUserByUserId(userId),
+                categoryValidator.validateAndReturnCategoryByCategoryId(eventInputDto.getCategory()),
                 LocationMapper.toLocation(locationService.addLocation(eventInputDto.getLocation())),
                 eventInputDto);
         EventFullDto eventFullDto = EventMapper.toFullDto(eventRepository.save(event), eventClient);
@@ -107,7 +109,7 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto updateEventFromAdmin(Long eventId, EventInputDto eventInputDto) {
         log.info("EventServiceImpl.updateEventFromAdmin start: eventId:{}, eventInputDto:{}", eventId, eventInputDto);
-        Event event = validation.validateAndReturnEventByEventId(eventId);
+        Event event = eventValidator.validateAndReturnEventByEventId(eventId);
         EventFullDto eventFullDto = EventMapper.toFullDto(prepareForUpdateEvent(event, eventInputDto), eventClient);
         log.info("EventServiceImpl.updateEventFromAdmin end: eventFullDto{}", eventFullDto);
         return eventFullDto;
@@ -118,9 +120,9 @@ public class EventServiceImpl implements EventService {
     public EventFullDto updateEventFromInitiator(Long userId, EventInputDto eventInputDto) {
         log.info("EventServiceImpl.updateEventFromInitiator start: userId:{}, eventInputDto:{}",
                 userId, eventInputDto);
-        validation.validateAndReturnUserByUserId(userId);
+        userValidator.validateAndReturnUserByUserId(userId);
         Event event = eventRepository.getByAndInitiator_UserId(userId);
-        validation.validateForStatusPublished(event);
+        eventValidator.validateForStatusPublished(event);
         if (event.getState().equals(State.REJECTED)) {
             event.setState(State.PENDING);
         }
@@ -133,9 +135,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto getEventByInitiatorId(Long userId, Long eventId) {
         log.info("EventServiceImpl.getEventByInitiatorId start: userId:{}, eventId:{}", userId, eventId);
-        validation.validateAndReturnUserByUserId(userId);
-        Event event = validation.validateAndReturnEventByEventId(eventId);
-        validation.validateForInitiatorEvent(userId, event);
+        userValidator.validateAndReturnUserByUserId(userId);
+        Event event = eventValidator.validateAndReturnEventByEventId(eventId);
+        eventValidator.validateForInitiatorEvent(userId, event);
         EventFullDto eventFullDto = EventMapper.toFullDto(event, eventClient);
         log.info("EventServiceImpl.getEventByInitiatorId end: eventFullDto:{}", eventFullDto);
         return eventFullDto;
@@ -144,8 +146,8 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto getEventByIdForPublic(Long eventId) {
         log.info("EventServiceImpl.getEventByIdForPublic start: eventId:{}", eventId);
-        Event event = validation.validateAndReturnEventByEventId(eventId);
-        validation.validateForNotStatusPublished(event);
+        Event event = eventValidator.validateAndReturnEventByEventId(eventId);
+        eventValidator.validateForNotStatusPublished(event);
         EventFullDto eventFullDto = EventMapper.toFullDto(event, eventClient);
         log.info("EventServiceImpl.getEventByIdForPublic end: eventFullDto:{}", eventFullDto);
         return eventFullDto;
@@ -155,8 +157,8 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto publishEvent(Long eventId) {
         log.info("EventServiceImpl.publishEvent start: eventId:{}", eventId);
-        Event event = validation.validateAndReturnEventByEventId(eventId);
-        validation.validateEventDateForPublish(event.getEventDate());
+        Event event = eventValidator.validateAndReturnEventByEventId(eventId);
+        eventValidator.validateEventDateForPublish(event.getEventDate());
         event.setState(State.PUBLISHED);
         EventFullDto eventFullDto = EventMapper.toFullDto(eventRepository.save(event), eventClient);
         log.info("EventServiceImpl.publishEvent end: eventFullDto:{}", eventFullDto);
@@ -167,8 +169,8 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto rejectEvent(Long eventId) {
         log.info("EventServiceImpl.rejectEvent start: eventId:{}", eventId);
-        Event event = validation.validateAndReturnEventByEventId(eventId);
-        validation.validateForStatusPending(event);
+        Event event = eventValidator.validateAndReturnEventByEventId(eventId);
+        eventValidator.validateForStatusPending(event);
         event.setState(State.CANCELED);
         EventFullDto eventFullDto = EventMapper.toFullDto(eventRepository.save(event), eventClient);
         log.info("EventServiceImpl.rejectEvent end: eventFullDto:{}", eventFullDto);
@@ -179,9 +181,9 @@ public class EventServiceImpl implements EventService {
     @Transactional
     public EventFullDto cancelEvent(Long userId, Long eventId) {
         log.info("EventServiceImpl.cancelEvent start: userId:{}, eventId:{}", userId, eventId);
-        Event event = validation.validateAndReturnEventByEventId(eventId);
-        validation.validateForStatusPending(event);
-        validation.validateForInitiatorEvent(userId, event);
+        Event event = eventValidator.validateAndReturnEventByEventId(eventId);
+        eventValidator.validateForStatusPending(event);
+        eventValidator.validateForInitiatorEvent(userId, event);
         event.setState(State.CANCELED);
         EventFullDto eventFullDto = EventMapper.toFullDto(eventRepository.save(event), eventClient);
         log.info("EventServiceImpl.cancelEvent end: eventFullDto:{}", eventFullDto);
@@ -191,12 +193,17 @@ public class EventServiceImpl implements EventService {
     private Event prepareForUpdateEvent(Event event, EventInputDto eventInputDto) {
 
         if (eventInputDto.getCategory() != null) {
-            event.setCategory(validation.validateAndReturnCategoryByCategoryId(eventInputDto.getCategory()));
+            event.setCategory(categoryValidator.validateAndReturnCategoryByCategoryId(eventInputDto.getCategory()));
         }
         if (eventInputDto.getLocation() != null) {
             event.getLocation().setLat(eventInputDto.getLocation().getLat());
             event.getLocation().setLon(eventInputDto.getLocation().getLon());
             locationService.updateLocation(LocationMapper.locationDto(event.getLocation()));
+        }
+        if (eventInputDto.getEventDate() != null) {
+            LocalDateTime eventDate = eventValidator.validateEventDateAddEvent(
+                    LocalDateTime.parse(eventInputDto.getEventDate(), FORMATTER));
+            event.setEventDate(eventDate);
         }
         if (eventInputDto.getAnnotation() != null) {
             event.setAnnotation(eventInputDto.getAnnotation());
@@ -204,11 +211,7 @@ public class EventServiceImpl implements EventService {
         if (eventInputDto.getDescription() != null) {
             event.setDescription(eventInputDto.getDescription());
         }
-        if (eventInputDto.getEventDate() != null) {
-            LocalDateTime eventDate = validation.validateEventDateAddEvent(
-                    LocalDateTime.parse(eventInputDto.getEventDate(), FORMATTER));
-            event.setEventDate(eventDate);
-        }
+
         if (eventInputDto.getPaid() != null) {
             event.setPaid(eventInputDto.getPaid());
         }

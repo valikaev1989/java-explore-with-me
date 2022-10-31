@@ -9,14 +9,14 @@ import ru.practicum.server.location.models.LocationDtos.LocationDto;
 import ru.practicum.server.location.models.LocationDtos.LocationInputDto;
 import ru.practicum.server.location.models.LocationDtos.LocationMapper;
 import ru.practicum.server.location.repositories.LocationRepository;
-import ru.practicum.server.utils.Validation;
+import ru.practicum.server.utils.LocationValidator;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class LocationServiceImpl implements LocationService {
     private final LocationRepository locationRepository;
-    private final Validation validation;
+    private final LocationValidator validator;
 
     @Override
     @Transactional
@@ -31,7 +31,7 @@ public class LocationServiceImpl implements LocationService {
     @Transactional
     public LocationDto updateLocation(LocationDto locationDto) {
         log.info("LocationService.updateLocation start: locationDto:{}", locationDto);
-        Location location = validation.validateAndReturnLocationByLocationId(locationDto.getLocationId());
+        Location location = validator.validateAndReturnLocationByLocationId(locationDto.getLocationId());
         if (locationDto.getLat() != null) {
             location.setLat(locationDto.getLat());
         }

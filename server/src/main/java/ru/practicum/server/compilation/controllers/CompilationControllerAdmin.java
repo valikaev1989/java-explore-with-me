@@ -19,42 +19,36 @@ public class CompilationControllerAdmin {
 
     @PostMapping()
     public CompilationOutputDto addCompilation(@RequestBody @Valid CompilationInputDto compilationInputDto) {
-        System.out.println("\n");
         log.info("CompilationControllerAdmin.addCompilation compilationInputDto: {}", compilationInputDto);
         return compilationService.addCompilation(compilationInputDto);
     }
 
     @DeleteMapping("/{compId}")
     public void deleteCompilation(@PathVariable @Min(0) Long compId) {
-        System.out.println("\n");
         log.info("CompilationControllerAdmin.deleteCompilation compId:{}", compId);
         compilationService.deleteCompilation(compId);
     }
 
     @PatchMapping("/{compId}/pin")
     public void pinCompilation(@PathVariable @Min(0) Long compId) {
-        System.out.println("\n");
         log.info("CompilationControllerAdmin.toFixCompilation compId:{}", compId);
         compilationService.pinCompilation(compId);
     }
 
     @DeleteMapping("/{compId}/pin")
     public void unpinCompilation(@PathVariable @Min(0) Long compId) {
-        System.out.println("\n");
         log.info("CompilationControllerAdmin.toUnfixCompilation compId:{}", compId);
         compilationService.unpinCompilation(compId);
     }
 
     @DeleteMapping("/{compId}/events/{eventId}")
     public void deleteEventFromCompilation(@PathVariable @Min(0) Long compId, @PathVariable @Min(0) Long eventId) {
-        System.out.println("\n");
         log.info("CompilationControllerAdmin.deleteEventFromCompilation compId:{}, eventId:{}", compId, eventId);
         compilationService.deleteEventFromCompilation(compId, eventId);
     }
 
     @PatchMapping("/{compId}/events/{eventId}")
     public void addEventToCompilation(@PathVariable @Min(0) Long compId, @PathVariable @Min(0) Long eventId) {
-        System.out.println("\n");
         log.info("CompilationControllerAdmin.addEventInCompilation compId:{}, eventId:{}", compId, eventId);
         compilationService.addEventToCompilation(compId, eventId);
     }

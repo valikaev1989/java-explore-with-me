@@ -35,7 +35,8 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public List<ViewStats> getViewStats(Map<String, Object> parameters) {
-        log.info("StatisticsServiceImpl.getViewStats start:");
+        log.info("StatisticsServiceImpl.getViewStats start: parameters: {}", parameters);
+        parameters.forEach((key, value) -> log.info("{}: {}", key, value));
         LocalDateTime start = convertRangeStart(parameters.get("start"));
         LocalDateTime end = convertRangeEnd(parameters.get("end"));
         List<String> uris = (List<String>) parameters.get("uris");

@@ -21,7 +21,6 @@ public class StatisticsController {
 
     @PostMapping("/hit")
     public EndpointDto addEndpointHit(@RequestBody EndpointDto endpointDto) {
-        System.out.println("\n");
         log.info("StatisticsController.addEndpointHit: endpointDto: {}", endpointDto);
         return statisticsService.addEndpointHit(endpointDto);
     }
@@ -32,7 +31,6 @@ public class StatisticsController {
             @RequestParam(value = "end", required = false) String end,
             @RequestParam(value = "uris", required = false, defaultValue = "List.of()") List<String> uris,
             @RequestParam(value = "unique", required = false, defaultValue = "false") Boolean unique) {
-        System.out.println("\n");
         log.info("StatisticsController.getViewStats:");
         Map<String, Object> parameters = Map.of(
                 "start", URLDecoder.decode(start, StandardCharsets.UTF_8),

@@ -1,5 +1,6 @@
 package ru.practicum.server.clientStatistics;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 import static ru.practicum.server.utils.FormatDate.FORMATTER;
 
+@Slf4j
 @Service
 public class EventClient extends BaseClient {
     @Autowired
@@ -40,6 +42,7 @@ public class EventClient extends BaseClient {
                 "unique", "false"
         );
         ResponseEntity<Object> response = get(url, parameters);
+        log.info("EventClient.getViews response: {}", response);
         List<ViewStats> viewStatsList = response.hasBody() ? (List<ViewStats>) response.getBody() : List.of();
         return viewStatsList != null && !viewStatsList.isEmpty() ? viewStatsList.get(0).getHits() : 0L;
     }
