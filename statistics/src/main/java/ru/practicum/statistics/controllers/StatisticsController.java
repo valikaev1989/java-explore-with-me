@@ -18,7 +18,7 @@ public class StatisticsController {
 
     @PostMapping("/hit")
     public EndpointDto addEndpointHit(@RequestBody EndpointDto endpointDto) {
-        log.info("StatisticsController.addEndpointHit: endpointDto: {}", endpointDto);
+        log.info("addEndpointHit: endpointDto: {}", endpointDto);
         return statisticsService.addEndpointHit(endpointDto);
     }
 

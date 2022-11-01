@@ -31,10 +31,10 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public List<CompilationOutputDto> getCompilations(Boolean pinned, Pageable page) {
-        log.info("CompilationServiceImpl.getCompilations start pinned: {}, page:{}", pinned, page);
+        log.info("getCompilations start: pinned: {}, page:{}", pinned, page);
         List<CompilationOutputDto> compilationOutputDtoList = getCompilationList(compilationRepository
                 .getAllByPinned(pinned, page), eventClient);
-        log.info("CompilationServiceImpl.getCompilations end List:");
+        log.info("getCompilations end List:");
         compilationOutputDtoList.forEach(this::logCompilationOutputDto);
         return compilationOutputDtoList;
     }
@@ -42,24 +42,23 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     @Transactional
     public CompilationOutputDto addCompilation(CompilationInputDto compilationInputDto) {
-        log.info("CompilationServiceImpl.addCompilation start compilationInputDto: {}", compilationInputDto);
+        log.info("addCompilation start: compilationInputDto: {}", compilationInputDto);
         Set<Event> events = eventValidator.getCorrectEventsSet(compilationInputDto.getEvents());
         Compilation compilation = toCompilation(compilationInputDto, events);
-        Compilation result = compilationRepository.save(compilation);
-        CompilationOutputDto compilationOutputDto = toCompilationDto(result, eventClient);
-        log.info("CompilationServiceImpl.addCompilation end:");
+        CompilationOutputDto compilationOutputDto = toCompilationDto(compilationRepository
+                .save(compilation), eventClient);
+        log.info("addCompilation end:");
         logCompilationOutputDto(compilationOutputDto);
         return compilationOutputDto;
     }
 
     @Override
     public CompilationOutputDto getCompilationById(Long compId) {
-        log.info("CompilationServiceImpl.getCompilationById start compId: {}", compId);
+        log.info("getCompilationById start: compId: {}", compId);
         Compilation compilation = compilationValidator
                 .validateAndReturnCompilationByCompilationId(compId);
-        System.out.println(compilation);
         CompilationOutputDto compilationOutputDto = toCompilationDto(compilation, eventClient);
-        log.info("CompilationServiceImpl.getCompilationById end:");
+        log.info("getCompilationById end:");
         logCompilationOutputDto(compilationOutputDto);
         return compilationOutputDto;
     }
@@ -67,52 +66,52 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     @Transactional
     public void deleteCompilation(Long compId) {
-        log.info("CompilationServiceImpl.deleteCompilation start compId: {}", compId);
+        log.info("deleteCompilation start: compId: {}", compId);
         compilationRepository.delete(compilationValidator.validateAndReturnCompilationByCompilationId(compId));
-        log.info("CompilationServiceImpl.deleteCompilation end compId: {}", compId);
+        log.info("deleteCompilation end: compId: {}", compId);
     }
 
     @Override
     @Transactional
     public void pinCompilation(Long compId) {
-        log.info("CompilationServiceImpl.pinCompilation start compId: {}", compId);
+        log.info("pinCompilation start: compId: {}", compId);
         Compilation compilation = compilationValidator.validateAndReturnCompilationByCompilationId(compId);
         compilation.setPinned(true);
         compilationRepository.save(compilation);
-        log.info("CompilationServiceImpl.pinCompilation end:");
+        log.info("pinCompilation end:");
         logCompilation(compilationValidator.validateAndReturnCompilationByCompilationId(compId));
     }
 
     @Override
     @Transactional
     public void unpinCompilation(Long compId) {
-        log.info("CompilationServiceImpl.unpinCompilation start compId: {}", compId);
+        log.info("unpinCompilation start: compId: {}", compId);
         Compilation compilation = compilationValidator.validateAndReturnCompilationByCompilationId(compId);
         compilation.setPinned(false);
         compilationRepository.save(compilation);
-        log.info("CompilationServiceImpl.unpinCompilation end:");
+        log.info("unpinCompilation end:");
         logCompilation(compilationValidator.validateAndReturnCompilationByCompilationId(compId));
     }
 
     @Override
     @Transactional
     public void deleteEventFromCompilation(Long compId, Long eventId) {
-        log.info("CompilationServiceImpl.deleteEventFromCompilation start compId: {}, eventId: {}", compId, eventId);
+        log.info("deleteEventFromCompilation start: compId: {}, eventId: {}", compId, eventId);
         Compilation compilation = compilationValidator.validateAndReturnCompilationByCompilationId(compId);
         compilation.getEventSet().removeIf(event -> event.getEventId().equals(eventId));
         compilationRepository.save(compilation);
-        log.info("CompilationServiceImpl.deleteEventFromCompilation end. " +
+        log.info("deleteEventFromCompilation end: " +
                 "delete event with id: {}, in compilation with id: {}.", eventId, compilation);
     }
 
     @Override
     @Transactional
     public void addEventToCompilation(Long compId, Long eventId) {
-        log.info("CompilationServiceImpl.unpinCompilation start compId: {}", compId);
+        log.info("unpinCompilation start: compId: {}", compId);
         Compilation compilation = compilationValidator.validateAndReturnCompilationByCompilationId(compId);
         compilation.getEventSet().add(eventValidator.validateAndReturnEventByEventId(eventId));
         compilationRepository.save(compilation);
-        log.info("CompilationServiceImpl.addEventToCompilation end compilation:");
+        log.info("addEventToCompilation end: compilation:");
         logCompilation(compilationValidator.validateAndReturnCompilationByCompilationId(compId));
     }
 
@@ -121,8 +120,7 @@ public class CompilationServiceImpl implements CompilationService {
                 compilationOutputDto.getId(),
                 compilationOutputDto.getPinned(),
                 compilationOutputDto.getTitle());
-        log.info("compilation: List:");
-        compilationOutputDto.getEvents().forEach(eventShortDto -> log.info("eventShortDto: {}", eventShortDto));
+        log.info("compilation: List: eventsSize: {}", compilationOutputDto.getEvents().size());
     }
 
     private void logCompilation(Compilation compilation) {
@@ -130,7 +128,6 @@ public class CompilationServiceImpl implements CompilationService {
                 compilation.getCompilationId(),
                 compilation.getPinned(),
                 compilation.getTitle());
-        log.info("compilation: List:");
-        compilation.getEventSet().forEach(event -> log.info("eventShortDto: {}", event));
+        log.info("compilation: List:eventsSize: {}", compilation.getEventSet().size());
     }
 }

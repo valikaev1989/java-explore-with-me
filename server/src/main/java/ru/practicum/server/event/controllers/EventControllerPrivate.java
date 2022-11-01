@@ -27,14 +27,14 @@ public class EventControllerPrivate {
             @PathVariable(value = "userId") @Min(0) Long userId,
             @RequestParam(value = "from", required = false, defaultValue = "0") @Min(0) Integer from,
             @RequestParam(value = "size", required = false, defaultValue = "10") @Min(0) Integer size) {
-        log.info("EventControllerPrivate.getAllEventsByUserId: userId:{}, from:{}, size:{}", userId, from, size);
+        log.info("getAllEventsByUserId: userId:{}, from:{}, size:{}", userId, from, size);
         return eventService.getAllEventsByInitiatorId(userId, FormatPage.getPage(from, size));
     }
 
     @PostMapping
     public EventFullDto addEvent(@PathVariable(value = "userId") Long userId,
                                  @RequestBody EventInputDto eventInputDto) {
-        log.info("EventControllerPrivate.addEvent: addEvent:{},eventInputDto:{}", userId, eventInputDto);
+        log.info("addEvent: addEvent:{},eventInputDto:{}", userId, eventInputDto);
         return eventService.addEvent(userId, eventInputDto);
     }
 
@@ -42,28 +42,28 @@ public class EventControllerPrivate {
     @PatchMapping
     public EventFullDto updateEventFromInitiator(@PathVariable(value = "userId") @Min(0) Long userId,
                                                  @RequestBody @Valid EventInputDto eventInputDto) {
-        log.info("EventControllerPrivate.updateEventFromInitiator: userId{}, eventInputDto{}", userId, eventInputDto);
+        log.info("updateEventFromInitiator: userId{}, eventInputDto{}", userId, eventInputDto);
         return eventService.updateEventFromInitiator(userId, eventInputDto);
     }
 
     @GetMapping("/{eventId}")
     public EventFullDto getEventByInitiatorId(@PathVariable(value = "userId") @Min(0) Long userId,
                                               @PathVariable(value = "eventId") @Min(0) Long eventId) {
-        log.info("EventControllerPrivate.getEventByInitiatorId: userId:{}, eventId:{}", userId, eventId);
+        log.info("getEventByInitiatorId: userId:{}, eventId:{}", userId, eventId);
         return eventService.getEventByInitiatorId(userId, eventId);
     }
 
     @PatchMapping("/{eventId}")
     public EventFullDto cancelEvent(@PathVariable(value = "userId") @Min(0) Long userId,
                                     @PathVariable(value = "eventId") @Min(0) Long eventId) {
-        log.info("EventControllerPrivate.cancelEvent: userId:{}, eventId:{}", userId, eventId);
+        log.info("cancelEvent: userId:{}, eventId:{}", userId, eventId);
         return eventService.cancelEvent(userId, eventId);
     }
 
     @GetMapping(("/{eventId}/requests"))
     public List<ParticipationRequestDto> getOwnerEventRequests(
             @PathVariable(value = "userId") Long userId, @PathVariable(value = "eventId") @Min(0) Long eventId) {
-        log.info("EventControllerPrivate.getOwnerEventRequest: userId:{}, eventId:{}", userId, eventId);
+        log.info("getOwnerEventRequest: userId:{}, eventId:{}", userId, eventId);
         return participationService.getOwnerEventRequests(userId, eventId);
     }
 
@@ -71,8 +71,7 @@ public class EventControllerPrivate {
     public ParticipationRequestDto confirmParticipationRequest(@PathVariable(value = "userId") @Min(0) Long userId,
                                                                @PathVariable(value = "eventId") @Min(0) Long eventId,
                                                                @PathVariable(value = "reqId") @Min(0) Long reqId) {
-        log.info("EventControllerPrivate.confirmParticipationRequest: userId:{}, eventId:{}, reqId: {}",
-                userId, eventId, reqId);
+        log.info("confirmParticipationRequest: userId:{}, eventId:{}, reqId: {}", userId, eventId, reqId);
         return participationService.confirmParticipationRequest(userId, eventId, reqId);
     }
 
@@ -80,8 +79,7 @@ public class EventControllerPrivate {
     public ParticipationRequestDto rejectParticipationRequest(@PathVariable(value = "userId") @Min(0) Long userId,
                                                               @PathVariable(value = "eventId") @Min(0) Long eventId,
                                                               @PathVariable(value = "reqId") @Min(0) Long reqId) {
-        log.info("EventControllerPrivate.confirmParticipationRequest: userId:{}, eventId:{}, reqId: {}",
-                userId, eventId, reqId);
+        log.info("confirmParticipationRequest: userId:{}, eventId:{}, reqId: {}", userId, eventId, reqId);
         return participationService.rejectParticipationRequest(userId, eventId, reqId);
     }
 }

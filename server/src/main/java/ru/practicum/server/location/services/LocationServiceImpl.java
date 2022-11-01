@@ -21,16 +21,17 @@ public class LocationServiceImpl implements LocationService {
     @Override
     @Transactional
     public LocationDto addLocation(LocationInputDto locationInputDto) {
-        log.info("LocationService.addLocation start: locationInputDto:{}", locationInputDto);
-        LocationDto locationResultDto = LocationMapper.locationDto(locationRepository.save(LocationMapper.toLocation(locationInputDto)));
-        log.info("LocationService.addLocation end: locationResultDto:{}", locationResultDto);
+        log.info("addLocation start: locationInputDto:{}", locationInputDto);
+        LocationDto locationResultDto = LocationMapper.locationDto(locationRepository
+                .save(LocationMapper.toLocation(locationInputDto)));
+        log.info("addLocation end: locationResultDto:{}", locationResultDto);
         return locationResultDto;
     }
 
     @Override
     @Transactional
     public LocationDto updateLocation(LocationDto locationDto) {
-        log.info("LocationService.updateLocation start: locationDto:{}", locationDto);
+        log.info("updateLocation start: locationDto:{}", locationDto);
         Location location = validator.validateAndReturnLocationByLocationId(locationDto.getLocationId());
         if (locationDto.getLat() != null) {
             location.setLat(locationDto.getLat());
@@ -39,7 +40,7 @@ public class LocationServiceImpl implements LocationService {
             location.setLon(locationDto.getLon());
         }
         LocationDto locationDtoResult = LocationMapper.locationDto(locationRepository.save(location));
-        log.info("LocationService.updateLocation end: locationDtoResult:{}", locationDtoResult);
+        log.info("updateLocation end: locationDtoResult:{}", locationDtoResult);
         return locationDtoResult;
     }
 }

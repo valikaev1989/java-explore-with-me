@@ -23,48 +23,48 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryDto> getAllCategories(Pageable pageable) {
-        log.info("CategoryService.getAllCategories start: pageable: {}", pageable);
+        log.info("getAllCategories start: pageable: {}", pageable);
         List<CategoryDto> categoryDtoList = CategoryMapper.toCategoryDtoList(categoryRepository.findAll(pageable));
-        log.info("CategoryService.getAllCategories end: categoryDtoList{}", categoryDtoList);
+        log.info("getAllCategories end: categoryDtoList{}", categoryDtoList);
         return categoryDtoList;
     }
 
     @Override
     @Transactional
     public CategoryDto addCategory(CategoryDto categoryDto) {
-        log.info("CategoryService.addCategory start categoryDto:{}", categoryDto);
+        log.info("addCategory start: categoryDto:{}", categoryDto);
         CategoryDto categoryDtoResult = CategoryMapper.toCategoryDto(
                 categoryRepository.save(CategoryMapper.toCategory(categoryDto)));
-        log.info("CategoryService.addCategory end categoryDtoResult:{}", categoryDtoResult);
+        log.info("addCategory end: categoryDtoResult:{}", categoryDtoResult);
         return categoryDtoResult;
     }
 
     @Override
     @Transactional
     public CategoryDto updateCategory(CategoryDto categoryDto) {
-        log.info("CategoryService.updateCategory start categoryDto:{}", categoryDto);
+        log.info("updateCategory start: categoryDto:{}", categoryDto);
         Category category = validator.validateAndReturnCategoryByCategoryId(categoryDto.getId());
         category.setName(categoryDto.getName());
         CategoryDto categoryDtoResult = CategoryMapper.toCategoryDto(categoryRepository.save(category));
-        log.info("CategoryService.updateCategory end categoryDtoResult:{}", categoryDtoResult);
+        log.info("updateCategory end: categoryDtoResult:{}", categoryDtoResult);
         return categoryDtoResult;
     }
 
     @Override
     public CategoryDto getCategoryById(Long categoryId) {
-        log.info("CategoryService.getCategoryById start categoryId:{}", categoryId);
+        log.info("getCategoryById start: categoryId:{}", categoryId);
         CategoryDto categoryDtoResult = CategoryMapper.toCategoryDto(
                 validator.validateAndReturnCategoryByCategoryId(categoryId));
-        log.info("CategoryService.getCategoryById end categoryDtoResult:{}", categoryDtoResult);
+        log.info("getCategoryById end: categoryDtoResult:{}", categoryDtoResult);
         return categoryDtoResult;
     }
 
     @Override
     @Transactional
     public void deleteCategoryById(Long categoryId) {
-        log.info("CategoryService.deleteCategoryById start categoryId:{}", categoryId);
+        log.info("deleteCategoryById start: categoryId:{}", categoryId);
         validator.validateAndReturnCategoryByCategoryId(categoryId);
         categoryRepository.deleteById(categoryId);
-        log.info("CategoryService.deleteCategoryById end categoryId:{}", categoryId);
+        log.info("deleteCategoryById end: categoryId:{}", categoryId);
     }
 }

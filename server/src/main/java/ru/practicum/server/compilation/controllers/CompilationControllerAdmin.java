@@ -19,37 +19,37 @@ public class CompilationControllerAdmin {
 
     @PostMapping()
     public CompilationOutputDto addCompilation(@RequestBody @Valid CompilationInputDto compilationInputDto) {
-        log.info("CompilationControllerAdmin.addCompilation compilationInputDto: {}", compilationInputDto);
+        log.info("addCompilation compilationInputDto: {}", compilationInputDto);
         return compilationService.addCompilation(compilationInputDto);
     }
 
     @DeleteMapping("/{compId}")
     public void deleteCompilation(@PathVariable @Min(0) Long compId) {
-        log.info("CompilationControllerAdmin.deleteCompilation compId:{}", compId);
+        log.info("deleteCompilation compId:{}", compId);
         compilationService.deleteCompilation(compId);
     }
 
     @PatchMapping("/{compId}/pin")
     public void pinCompilation(@PathVariable @Min(0) Long compId) {
-        log.info("CompilationControllerAdmin.toFixCompilation compId:{}", compId);
+        log.info("toFixCompilation compId:{}", compId);
         compilationService.pinCompilation(compId);
     }
 
     @DeleteMapping("/{compId}/pin")
     public void unpinCompilation(@PathVariable @Min(0) Long compId) {
-        log.info("\nCompilationControllerAdmin.toUnfixCompilation compId:{}", compId);
+        log.info("toUnfixCompilation compId:{}", compId);
         compilationService.unpinCompilation(compId);
     }
 
     @DeleteMapping("/{compId}/events/{eventId}")
     public void deleteEventFromCompilation(@PathVariable @Min(0) Long compId, @PathVariable @Min(0) Long eventId) {
-        log.info("\nCompilationControllerAdmin.deleteEventFromCompilation compId:{}, eventId:{}", compId, eventId);
+        log.info("deleteEventFromCompilation compId:{}, eventId:{}", compId, eventId);
         compilationService.deleteEventFromCompilation(compId, eventId);
     }
 
     @PatchMapping("/{compId}/events/{eventId}")
     public void addEventToCompilation(@PathVariable @Min(0) Long compId, @PathVariable @Min(0) Long eventId) {
-        log.info("\nCompilationControllerAdmin.addEventInCompilation compId:{}, eventId:{}", compId, eventId);
+        log.info("CompilationControllerAdmin.addEventInCompilation compId:{}, eventId:{}", compId, eventId);
         compilationService.addEventToCompilation(compId, eventId);
     }
 }

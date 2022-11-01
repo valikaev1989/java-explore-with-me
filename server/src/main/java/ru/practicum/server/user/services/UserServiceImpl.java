@@ -23,28 +23,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserOutputDto> getAllUsers(List<Long> ids, Pageable page) {
-        log.info("UserService.getAllUsers start: ids:{}, page: {}.", ids, page);
+        log.info("getAllUsers start: ids:{}, page: {}.", ids, page);
         List<UserOutputDto> userOutputDtoList = checkListUserIds(ids, page);
-        log.info("UserService.getAllUsers end: userOutputDtoList:{}.", userOutputDtoList);
+        log.info("getAllUsers end: userOutputDtoList:{}.", userOutputDtoList);
         return userOutputDtoList;
     }
 
     @Override
     @Transactional
     public UserOutputDto addUser(UserInputDto userInputDto) {
-        log.info("UserService.addUser start: userInputDto:{}.", userInputDto);
+        log.info("addUser start: userInputDto:{}.", userInputDto);
         UserOutputDto userOutputDto = UserMapper.toDto(userRepository.save(UserMapper.toUser(userInputDto)));
-        log.info("UserService.addUser end: userOutputDto:{}.", userOutputDto);
+        log.info("addUser end: userOutputDto:{}.", userOutputDto);
         return userOutputDto;
     }
 
     @Override
     @Transactional
     public void deleteUser(Long userId) {
-        log.info("UserService.deleteUser start: userId:{}.", userId);
+        log.info("deleteUser start: userId:{}.", userId);
         validator.validateAndReturnUserByUserId(userId);
         userRepository.deleteById(userId);
-        log.info("UserService.deleteUser end userId:{}.", userId);
+        log.info("deleteUser end userId:{}.", userId);
     }
 
     private List<UserOutputDto> checkListUserIds(List<Long> ids, Pageable pageable) {

@@ -22,8 +22,7 @@ public class CategoryValidator {
     }
 
     public List<Long> getCorrectCategoryIdList(List<Long> ids) {
-        log.info("Validation.getCorrectCategoryIdList start: ids:");
-        ids.forEach(id -> log.info("{}", id));
+        log.info("Validation.getCorrectCategoryIdList start: ids: {}", ids);
         List<Long> categoryIds = new ArrayList<>();
         for (Long id : ids) {
             try {
@@ -33,8 +32,7 @@ public class CategoryValidator {
                 log.warn(ex.getMessage());
             }
         }
-        log.info("Validation.getCorrectCategoryIdList end: CategoryIds:");
-        categoryIds.forEach(id -> log.info("{}", id));
+        log.info("Validation.getCorrectCategoryIdList end: CategoryIds: {}", categoryIds);
         return categoryIds;
     }
 }

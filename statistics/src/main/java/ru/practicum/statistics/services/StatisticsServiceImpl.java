@@ -25,14 +25,14 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     public EndpointDto addEndpointHit(EndpointDto endpointDto) {
-        log.info("StatisticsServiceImpl.addEndpointHit start:");
+        log.info("addEndpointHit start: endpointDto: {}", endpointDto);
         EndpointDto result = toEndpointDto(statisticsRepository.save(toEndpointHit(endpointDto)));
-        log.info("StatisticsServiceImpl.addEndpointHit end: endpointDto: {}", result);
+        log.info("addEndpointHit end: endpointDto: {}", result);
         return result;
     }
 
     @Override
-    public List<ViewStats> getViewStats(String start, String end,List<String> uris, Boolean unique) {
+    public List<ViewStats> getViewStats(String start, String end, List<String> uris, Boolean unique) {
         log.info("StatisticsServiceImpl.getViewStats: start: {}, end: {},uris: {}, unique: {}",
                 start, end, uris, unique);
         LocalDateTime start1 = convertRangeStart(start);
@@ -45,8 +45,7 @@ public class StatisticsServiceImpl implements StatisticsService {
             viewStats = (unique ? statisticsRepository.getStatsUniqueByTimeAndUris(start1, end1, uris)
                     : statisticsRepository.getStatsByTimeAndUris(start1, end1, uris));
         }
-        log.info("StatisticsServiceImpl.addEndpointHit end: viewStatsList:");
-        viewStats.forEach(viewStat -> log.info("viewStat: {}", viewStat));
+        log.info("StatisticsServiceImpl.addEndpointHit end: viewStatsList: {}", viewStats);
         return viewStats;
     }
 }

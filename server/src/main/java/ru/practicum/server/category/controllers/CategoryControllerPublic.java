@@ -21,13 +21,13 @@ public class CategoryControllerPublic {
     public List<CategoryDto> getAllCategory(
             @RequestParam(value = "from", required = false, defaultValue = "0") @Min(0) Integer from,
             @RequestParam(value = "size", required = false, defaultValue = "10") @Min(0) Integer size) {
-        log.info("CategoryControllerPublic.getAllCategory from={}, size={}", from, size);
+        log.info("getAllCategory: from={}, size={}", from, size);
         return categoryService.getAllCategories(FormatPage.getPage(from, size));
     }
 
     @GetMapping("/{catId}")
     public CategoryDto getCategoryById(@PathVariable @Min(0) Long catId) {
-        log.info("CategoryControllerPublic.getCategoryById catId={}", catId);
+        log.info("getCategoryById: catId={}", catId);
         return categoryService.getCategoryById(catId);
     }
 }

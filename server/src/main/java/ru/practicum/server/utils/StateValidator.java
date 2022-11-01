@@ -13,8 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class StateValidator {
     public List<State> getCorrectStateList(List<String> states) {
-        log.info("Validation.getCorrectStateList start: states:");
-        states.forEach(state -> log.info("{}", state));
+        log.info("Validation.getCorrectStateList start: states: {}", states);
         List<State> stateList = new ArrayList<>();
         for (String state : states) {
             try {
@@ -23,8 +22,7 @@ public class StateValidator {
                 log.warn(ex.getMessage());
             }
         }
-        log.info("Validation.getCorrectStateList end: stateList:");
-        stateList.forEach(state -> log.info("{}", state));
+        log.info("Validation.getCorrectStateList end: stateList: {}", stateList);
         return stateList;
     }
 }

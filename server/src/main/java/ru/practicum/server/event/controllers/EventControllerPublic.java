@@ -47,7 +47,7 @@ public class EventControllerPublic {
         );
         log.info("client ip: {}", request.getRemoteAddr());
         log.info("endpoint path: {}", request.getRequestURI());
-        log.info("EventControllerPublic.getAllEventForPublic filter:");
+        log.info("getAllEventForPublic filter:");
         filter.forEach((key, value) -> log.info("{}: {}", key, value));
         eventClient.postStats(StatsMapper.toEndpointDto("EWM-Server", request));
         return eventService.getAllEventsForPublic(filter);
@@ -58,7 +58,7 @@ public class EventControllerPublic {
                                               HttpServletRequest request) {
         log.info("client ip: {}", request.getRemoteAddr());
         log.info("endpoint path: {}", request.getRequestURI());
-        log.info("EventControllerPublic.getEventByIdForPublic: eventId:{}", eventId);
+        log.info("getEventByIdForPublic: eventId:{}", eventId);
         eventClient.postStats(StatsMapper.toEndpointDto("EWM-Server", request));
         return eventService.getEventByIdForPublic(eventId);
     }

@@ -43,7 +43,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventFullDto> getEventsByFilterForAdmin(Map<String, Object> filter) {
-        log.info("EventServiceImpl.getEventsByFilterForAdmin start filter:");
+        log.info("getEventsByFilterForAdmin start: filter:");
         filter.forEach((key, value) -> log.info("{}:{}", key, value));
         List<Long> userIds = userValidator.getCorrectUserIdList((List<Long>) filter.get("users"));
         List<State> states = stateValidator.getCorrectStateList((List<String>) filter.get("states"));
@@ -54,25 +54,23 @@ public class EventServiceImpl implements EventService {
         List<EventFullDto> eventFullDtoList = EventMapper.toFullDtoList(eventRepository
                 .getAllEventsByParametersForAdmin(
                         userIds, categoryIds, states, rangeStart, rangeEnd, pageable), eventClient);
-        log.info("EventServiceImpl.getEventsByFilterForAdmin end eventFullDtoList:");
-        eventFullDtoList.forEach(eventFullDto -> log.info("eventFullDto:{}", eventFullDto));
+        log.info("getEventsByFilterForAdmin end: eventFullDtoListSize: {}", eventFullDtoList.size());
         return eventFullDtoList;
     }
 
     @Override
     public List<EventFullDto> getAllEventsByInitiatorId(Long userId, Pageable page) {
-        log.info("EventServiceImpl.getAllEventsByInitiatorId start: userId:{}, page:{}", userId, page);
+        log.info("getAllEventsByInitiatorId start: userId:{}, page:{}", userId, page);
         userValidator.validateAndReturnUserByUserId(userId);
         List<EventFullDto> eventFullDtoList = EventMapper.toFullDtoList(
                 eventRepository.findAllByInitiator_UserId(userId, page), eventClient);
-        log.info("EventServiceImpl.getAllEventsByInitiatorId end: eventFullDtoList:");
-        eventFullDtoList.forEach(eventFullDto -> log.info("eventFullDto:{}", eventFullDto));
+        log.info("getAllEventsByInitiatorId end: eventFullDtoListSize: {}", eventFullDtoList.size());
         return eventFullDtoList;
     }
 
     @Override
     public List<EventShortDto> getAllEventsForPublic(Map<String, Object> filter) {
-        log.info("EventServiceImpl.getAllEventsForPublic start: filter:");
+        log.info("getAllEventsForPublic start: filter:");
         filter.forEach((key, value) -> log.info("{}:{}", key, value));
         String text = (String) filter.get("text");
         List<Long> categoryIds = categoryValidator.getCorrectCategoryIdList((List<Long>) filter.get("categories"));
@@ -85,15 +83,14 @@ public class EventServiceImpl implements EventService {
                         State.PUBLISHED, categoryIds, text, paid, rangeStart, rangeEnd, pageable),
                 (Boolean) filter.get("onlyAvailable"),
                 (String) filter.get("sort"));
-        log.info("EventServiceImpl.getAllEventsForPublic end: eventShortDtoList:");
-        eventShortDtoList.forEach(eventShortDto -> log.info("eventShortDto:{}", eventShortDto));
+        log.info("getAllEventsForPublic end: eventShortDtoListSize: {}", eventShortDtoList.size());
         return eventShortDtoList;
     }
 
     @Override
     @Transactional
     public EventFullDto addEvent(Long userId, EventInputDto eventInputDto) {
-        log.info("EventServiceImpl.addEvent start: userId: {}, eventInputDto: {}", userId, eventInputDto);
+        log.info("addEvent start: userId: {}, eventInputDto: {}", userId, eventInputDto);
         eventValidator.validateEventDateAddEvent(LocalDateTime.parse(eventInputDto.getEventDate(), FORMATTER));
         Event event = EventMapper.toEvent(
                 userValidator.validateAndReturnUserByUserId(userId),
@@ -101,24 +98,24 @@ public class EventServiceImpl implements EventService {
                 LocationMapper.toLocation(locationService.addLocation(eventInputDto.getLocation())),
                 eventInputDto);
         EventFullDto eventFullDto = EventMapper.toFullDto(eventRepository.save(event), eventClient);
-        log.info("EventServiceImpl.addEvent end: eventFullDto: {}", eventFullDto);
+        log.info("addEvent end: eventFullDto: {}", eventFullDto);
         return eventFullDto;
     }
 
     @Override
     @Transactional
     public EventFullDto updateEventFromAdmin(Long eventId, EventInputDto eventInputDto) {
-        log.info("EventServiceImpl.updateEventFromAdmin start: eventId:{}, eventInputDto:{}", eventId, eventInputDto);
+        log.info("updateEventFromAdmin start: eventId:{}, eventInputDto:{}", eventId, eventInputDto);
         Event event = eventValidator.validateAndReturnEventByEventId(eventId);
         EventFullDto eventFullDto = EventMapper.toFullDto(prepareForUpdateEvent(event, eventInputDto), eventClient);
-        log.info("EventServiceImpl.updateEventFromAdmin end: eventFullDto{}", eventFullDto);
+        log.info("updateEventFromAdmin end: eventFullDto{}", eventFullDto);
         return eventFullDto;
     }
 
     @Override
     @Transactional
     public EventFullDto updateEventFromInitiator(Long userId, EventInputDto eventInputDto) {
-        log.info("EventServiceImpl.updateEventFromInitiator start: userId:{}, eventInputDto:{}",
+        log.info("updateEventFromInitiator start: userId:{}, eventInputDto:{}",
                 userId, eventInputDto);
         userValidator.validateAndReturnUserByUserId(userId);
         Event event = eventRepository.getByAndInitiator_UserId(userId);
@@ -128,71 +125,70 @@ public class EventServiceImpl implements EventService {
         }
         prepareForUpdateEvent(event, eventInputDto);
         EventFullDto eventFullDto = EventMapper.toFullDto(event, eventClient);
-        log.info("EventServiceImpl.updateEventFromInitiator end: eventFullDto{}", eventFullDto);
+        log.info("updateEventFromInitiator end: eventFullDto{}", eventFullDto);
         return eventFullDto;
     }
 
     @Override
     public EventFullDto getEventByInitiatorId(Long userId, Long eventId) {
-        log.info("EventServiceImpl.getEventByInitiatorId start: userId:{}, eventId:{}", userId, eventId);
+        log.info("getEventByInitiatorId start: userId:{}, eventId:{}", userId, eventId);
         userValidator.validateAndReturnUserByUserId(userId);
         Event event = eventValidator.validateAndReturnEventByEventId(eventId);
         eventValidator.validateForInitiatorEvent(userId, event);
         EventFullDto eventFullDto = EventMapper.toFullDto(event, eventClient);
-        log.info("EventServiceImpl.getEventByInitiatorId end: eventFullDto:{}", eventFullDto);
+        log.info("getEventByInitiatorId end: eventFullDto:{}", eventFullDto);
         return eventFullDto;
     }
 
     @Override
     public EventFullDto getEventByIdForPublic(Long eventId) {
-        log.info("EventServiceImpl.getEventByIdForPublic start: eventId:{}", eventId);
+        log.info("getEventByIdForPublic start: eventId:{}", eventId);
         Event event = eventValidator.validateAndReturnEventByEventId(eventId);
         eventValidator.validateForNotStatusPublished(event);
         EventFullDto eventFullDto = EventMapper.toFullDto(event, eventClient);
-        log.info("EventServiceImpl.getEventByIdForPublic end: eventFullDto:{}", eventFullDto);
+        log.info("getEventByIdForPublic end: eventFullDto:{}", eventFullDto);
         return eventFullDto;
     }
 
     @Override
     @Transactional
     public EventFullDto publishEvent(Long eventId) {
-        log.info("EventServiceImpl.publishEvent start: eventId:{}", eventId);
+        log.info("publishEvent start: eventId:{}", eventId);
         Event event = eventValidator.validateAndReturnEventByEventId(eventId);
         eventValidator.validateEventDateForPublish(event.getEventDate());
         event.setState(State.PUBLISHED);
         event.setPublishedOn(LocalDateTime.now());
         EventFullDto eventFullDto = EventMapper.toFullDto(eventRepository.save(event), eventClient);
-        log.info("EventServiceImpl.publishEvent end: eventFullDto:{}", eventFullDto);
+        log.info("publishEvent end: eventFullDto:{}", eventFullDto);
         return eventFullDto;
     }
 
     @Override
     @Transactional
     public EventFullDto rejectEvent(Long eventId) {
-        log.info("EventServiceImpl.rejectEvent start: eventId:{}", eventId);
+        log.info("rejectEvent start: eventId:{}", eventId);
         Event event = eventValidator.validateAndReturnEventByEventId(eventId);
         eventValidator.validateForStatusPending(event);
         event.setState(State.CANCELED);
         EventFullDto eventFullDto = EventMapper.toFullDto(eventRepository.save(event), eventClient);
-        log.info("EventServiceImpl.rejectEvent end: eventFullDto:{}", eventFullDto);
+        log.info("rejectEvent end: eventFullDto:{}", eventFullDto);
         return eventFullDto;
     }
 
     @Override
     @Transactional
     public EventFullDto cancelEvent(Long userId, Long eventId) {
-        log.info("EventServiceImpl.cancelEvent start: userId:{}, eventId:{}", userId, eventId);
+        log.info("cancelEvent start: userId:{}, eventId:{}", userId, eventId);
         Event event = eventValidator.validateAndReturnEventByEventId(eventId);
         eventValidator.validateForStatusPending(event);
         eventValidator.validateForInitiatorEvent(userId, event);
         event.setState(State.CANCELED);
         EventFullDto eventFullDto = EventMapper.toFullDto(eventRepository.save(event), eventClient);
-        log.info("EventServiceImpl.cancelEvent end: eventFullDto:{}", eventFullDto);
+        log.info("cancelEvent end: eventFullDto:{}", eventFullDto);
         return eventFullDto;
     }
 
     private Event prepareForUpdateEvent(Event event, EventInputDto eventInputDto) {
-
         if (eventInputDto.getCategory() != null) {
             event.setCategory(categoryValidator.validateAndReturnCategoryByCategoryId(eventInputDto.getCategory()));
         }
@@ -238,6 +234,7 @@ public class EventServiceImpl implements EventService {
             case ("VIEWS"):
                 return Comparator.comparing(Event::getViews);
             default:
+                log.warn("Неизвестная сортировка: {}", sort);
                 throw new ValidationException("Неизвестная сортировка: " + sort + ".");
         }
     }

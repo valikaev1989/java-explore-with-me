@@ -18,19 +18,19 @@ public class CategoryControllerAdmin {
 
     @PostMapping()
     public CategoryDto addCategory(@RequestBody @Valid CategoryDto categoryDto) {
-        log.info("CategoryControllerAdmin.addCategory: categoryDto{}", categoryDto);
+        log.info("addCategory: categoryDto{}", categoryDto);
         return categoryService.addCategory(categoryDto);
     }
 
     @PatchMapping
     public CategoryDto updateCategory(@RequestBody @Valid CategoryDto categoryDto) {
-        log.info("CategoryControllerAdmin.addCategory: categoryDto{}", categoryDto);
+        log.info("updateCategory: categoryDto{}", categoryDto);
         return categoryService.updateCategory(categoryDto);
     }
 
     @DeleteMapping("/{catId}")
     public void deleteCategoryById(@PathVariable @Min(0) Long catId) {
-        log.info("CategoryControllerAdmin.deleteCategoryById: catId{}", catId);
+        log.info("deleteCategoryById: catId{}", catId);
         categoryService.deleteCategoryById(catId);
     }
 }

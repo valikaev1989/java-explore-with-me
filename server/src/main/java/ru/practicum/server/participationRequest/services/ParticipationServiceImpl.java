@@ -31,11 +31,11 @@ public class ParticipationServiceImpl implements ParticipationService {
 
     @Override
     public List<ParticipationRequestDto> getUserRequestsParticipation(Long userId) {
-        log.info("ParticipationServiceImpl.getUserRequestsParticipation start: userId: {}", userId);
+        log.info("getUserRequestsParticipation start: userId: {}", userId);
         validator.validateAndReturnUserByUserId(userId);
         List<ParticipationRequestDto> requestOutputDtos = ParticipationRequestMapper.requestDtoList(
                 participationRepository.getAllByUser_UserId(userId));
-        log.info("ParticipationServiceImpl.getUserRequestsParticipation end: requestOutputDtos:");
+        log.info("getUserRequestsParticipation end: requestOutputDtos:");
         requestOutputDtos.forEach(requestDto -> log.info("requestDto: {}", requestDto));
         return requestOutputDtos;
     }
@@ -43,7 +43,7 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     @Transactional
     public ParticipationRequestDto addUserRequestParticipation(Long userId, Long eventId) {
-        log.info("ParticipationServiceImpl.addUserRequestParticipation start: userId: {}, eventId: {}",
+        log.info("addUserRequestParticipation start: userId: {}, eventId: {}",
                 userId, eventId);
         Event event = eventValidator.validateAndReturnEventByEventId(eventId);
         requestValidator.validateAddParticipationRequest(userId, event);
@@ -57,33 +57,33 @@ public class ParticipationServiceImpl implements ParticipationService {
             event.setConfirmedRequests(event.getConfirmedRequests() + 1);
             eventRepository.save(event);
         }
-        log.info("ParticipationServiceImpl.addUserRequestParticipation end: requestDto: {}", requestDto);
+        log.info("addUserRequestParticipation end: requestDto: {}", requestDto);
         return requestDto;
     }
 
     @Override
     @Transactional
     public ParticipationRequestDto cancelUserRequestParticipation(Long userId, Long requestId) {
-        log.info("ParticipationServiceImpl.cancelUserRequestParticipation start: userId: {}, requestId :{}",
+        log.info("cancelUserRequestParticipation start: userId: {}, requestId :{}",
                 userId, requestId);
         ParticipationRequest request = requestValidator.validateAndReturnParticipationRequestByRequestId(requestId);
         requestValidator.validateOwnerRequest(userId, request);
         request.setStatus(State.CANCELED);
         ParticipationRequestDto requestDto = ParticipationRequestMapper
                 .toDtoRequest(participationRepository.save(request));
-        log.info("ParticipationServiceImpl.cancelUserRequestParticipation end: requestDto:{}", requestDto);
+        log.info("cancelUserRequestParticipation end: requestDto:{}", requestDto);
         return requestDto;
     }
 
     @Override
     public List<ParticipationRequestDto> getOwnerEventRequests(Long userId, Long eventId) {
-        log.info("ParticipationServiceImpl.getOwnerEventRequests start: userId: {}, eventId :{}", userId, eventId);
+        log.info("getOwnerEventRequests start: userId: {}, eventId :{}", userId, eventId);
         validator.validateAndReturnUserByUserId(userId);
         eventValidator.validateAndReturnEventByEventId(eventId);
         List<ParticipationRequestDto> requestDtoList = ParticipationRequestMapper
                 .requestDtoList(participationRepository
                         .getOwnerEventRequests(userId, eventId));
-        log.info("ParticipationServiceImpl.getOwnerEventRequests end: requestDtoList:");
+        log.info("getOwnerEventRequests end: requestDtoList:");
         requestDtoList.forEach(requestDto -> log.info("requestDto: {}", requestDtoList));
         return requestDtoList;
     }
@@ -91,7 +91,7 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     @Transactional
     public ParticipationRequestDto confirmParticipationRequest(Long userId, Long eventId, Long reqId) {
-        log.info("ParticipationServiceImpl.confirmParticipationRequest start: userId: {}, eventId :{}, reqId: {}",
+        log.info("confirmParticipationRequest start: userId: {}, eventId :{}, reqId: {}",
                 userId, eventId, reqId);
         Event event = eventValidator.validateAndReturnEventByEventId(eventId);
         ParticipationRequest request = requestValidator.validateAndReturnParticipationRequestByRequestId(reqId);
@@ -100,7 +100,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         addConfirmRequestInEvent(event, request);
         rejectedOtherRequests(event);
         ParticipationRequestDto requestDto = ParticipationRequestMapper.toDtoRequest(request);
-        log.info("ParticipationServiceImpl.confirmParticipationRequest end: requestDto:{}", requestDto);
+        log.info("confirmParticipationRequest end: requestDto:{}", requestDto);
         return requestDto;
     }
 
@@ -108,7 +108,7 @@ public class ParticipationServiceImpl implements ParticipationService {
     @Override
     @Transactional
     public ParticipationRequestDto rejectParticipationRequest(Long userId, Long eventId, Long reqId) {
-        log.info("ParticipationServiceImpl.rejectParticipationRequest start: userId: {}, eventId :{}, reqId: {}",
+        log.info("rejectParticipationRequest start: userId: {}, eventId :{}, reqId: {}",
                 userId, eventId, reqId);
         Event event = eventValidator.validateAndReturnEventByEventId(eventId);
         eventValidator.validateForInitiatorEvent(userId, event);
@@ -116,7 +116,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         request.setStatus(State.REJECTED);
         ParticipationRequestDto requestDto = ParticipationRequestMapper
                 .toDtoRequest(participationRepository.save(request));
-        log.info("ParticipationServiceImpl.rejectParticipationRequest end: requestDto:{}", requestDto);
+        log.info("rejectParticipationRequest end: requestDto:{}", requestDto);
         return requestDto;
     }
 

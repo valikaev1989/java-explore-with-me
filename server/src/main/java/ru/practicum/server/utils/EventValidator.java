@@ -26,8 +26,7 @@ public class EventValidator {
     }
 
     public Set<Event> getCorrectEventsSet(List<Long> ids) {
-        log.info("Validation.getCorrectEventsList start: ids:");
-        ids.forEach(id -> log.info("{}", id));
+        log.info("Validation.getCorrectEventsList start: ids: {}", ids);
         Set<Event> events = new HashSet<>();
         for (Long id : ids) {
             try {
@@ -37,8 +36,7 @@ public class EventValidator {
                 log.warn(ex.getMessage());
             }
         }
-        log.info("Validation.getCorrectEventsList end: ids:");
-        events.forEach(event -> log.info("{}", event));
+        log.info("Validation.getCorrectEventsList end: ids: {}", events);
         return events;
     }
 

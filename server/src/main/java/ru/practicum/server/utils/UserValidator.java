@@ -22,8 +22,7 @@ public class UserValidator {
     }
 
     public List<Long> getCorrectUserIdList(List<Long> ids) {
-        log.info("Validation.getCorrectUserIdList start: ids:");
-        ids.forEach(id -> log.info("{}", id));
+        log.info("Validation.getCorrectUserIdList start: ids: {}", ids);
         List<Long> userIds = new ArrayList<>();
         for (Long id : ids) {
             try {
@@ -33,8 +32,7 @@ public class UserValidator {
                 log.warn(ex.getMessage());
             }
         }
-        log.info("Validation.getCorrectUserIdList end: ids:");
-        userIds.forEach(id -> log.info("{}", id));
+        log.info("Validation.getCorrectUserIdList end: ids: {}", userIds);
         return userIds;
     }
 }

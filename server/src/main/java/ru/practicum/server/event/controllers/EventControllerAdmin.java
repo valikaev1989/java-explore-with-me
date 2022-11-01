@@ -35,7 +35,7 @@ public class EventControllerAdmin {
                 "rangeEnd", rangeEnd,
                 "from", from,
                 "size", size);
-        log.info("EventControllerAdmin.getEventsByFilter:filter:");
+        log.info("getEventsByFilter:filter:");
         filter.forEach((key, value) -> log.info("{}:{}", key, value));
         return eventService.getEventsByFilterForAdmin(filter);
     }
@@ -43,19 +43,19 @@ public class EventControllerAdmin {
     @PutMapping("/{eventId}")
     public EventFullDto updateEventFromAdmin(@PathVariable(value = "eventId") @Min(0) Long eventId,
                                              @RequestBody EventInputDto eventInputDto) {
-        log.info("EventControllerAdmin.updateEvent: eventId{}, eventInputDto{}", eventId, eventInputDto);
+        log.info("updateEvent: eventId{}, eventInputDto{}", eventId, eventInputDto);
         return eventService.updateEventFromAdmin(eventId, eventInputDto);
     }
 
     @PatchMapping("/{eventId}/publish")
     public EventFullDto publishEvent(@PathVariable(value = "eventId") @Min(0) Long eventId) {
-        log.info("EventControllerAdmin.publishEvent: eventId:{}", eventId);
+        log.info("publishEvent: eventId:{}", eventId);
         return eventService.publishEvent(eventId);
     }
 
     @PatchMapping("/{eventId}/reject")
     public EventFullDto rejectEvent(@PathVariable(value = "eventId") @Min(0) Long eventId) {
-        log.info("EventControllerAdmin.rejectEvent: eventId:{}", eventId);
+        log.info("rejectEvent: eventId:{}", eventId);
         return eventService.rejectEvent(eventId);
     }
 }

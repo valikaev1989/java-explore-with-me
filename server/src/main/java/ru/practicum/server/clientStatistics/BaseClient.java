@@ -1,5 +1,6 @@
 package ru.practicum.server.clientStatistics;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -8,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class BaseClient {
     protected final RestTemplate rest;
 
@@ -45,6 +47,7 @@ public class BaseClient {
                 statsServerResponse = rest.exchange(path, method, requestEntity, Object.class);
             }
         } catch (HttpStatusCodeException ex) {
+            log.warn("makeAndSendRequest: exStatus: {}, exMessage: {}", ex.getStatusCode(), ex.getMessage());
             return ResponseEntity.status(ex.getStatusCode()).body(ex.getResponseBodyAsByteArray());
         }
         return prepareEventClientResponse(statsServerResponse);
