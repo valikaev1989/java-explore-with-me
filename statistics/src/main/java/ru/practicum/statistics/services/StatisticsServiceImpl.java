@@ -45,7 +45,7 @@ public class StatisticsServiceImpl implements StatisticsService {
             viewStats = (unique ? statisticsRepository.getStatsUniqueByTimeAndUris(start1, end1, uris)
                     : statisticsRepository.getStatsByTimeAndUris(start1, end1, uris));
         }
-        log.info("StatisticsServiceImpl.addEndpointHit end: viewStatsList: {}", viewStats);
+        log.info("StatisticsServiceImpl.getViewStats end: viewStatsList: {}", viewStats);
         return viewStats;
     }
 }

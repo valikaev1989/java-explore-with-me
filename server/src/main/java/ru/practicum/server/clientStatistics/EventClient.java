@@ -31,10 +31,13 @@ public class EventClient extends BaseClient {
     }
 
     public void postStats(EndpointDto endpointDto) {
+        log.info("postStats start: endpointDto: {}", endpointDto);
         post("/hit", endpointDto);
+        log.info("postStats end: ok");
     }
 
     public Long getViews(Long eventId) {
+        log.info("getViews start: eventId: {}", eventId);
         String url = "/stats?start={start}&end={end}&uris={uris}&unique={unique}";
         Map<String, Object> parameters = Map.of(
                 "start", URLEncoder.encode(LocalDateTime.now()
@@ -44,8 +47,13 @@ public class EventClient extends BaseClient {
                 "unique", "false"
         );
         ResponseEntity<Object> response = get(url, parameters);
-        log.info("EventClient.getViews response: {}", response);
+        log.info("EventClient.getViews response: {}", response.getBody());
         List<ViewStats> viewStatsList = response.hasBody() ? (List<ViewStats>) response.getBody() : List.of();
+        log.info("viewStatsList: {}", viewStatsList);
         return viewStatsList != null && !viewStatsList.isEmpty() ? viewStatsList.get(0).getHits() : 0L;
+//        List<Object> viewStatsList = response.hasBody() ? (List<Object>) response.getBody() : List.of();
+//        ViewStats viewStat = (ViewStats) (viewStatsList != null ? viewStatsList.get(0) : null);
+//        log.info("EventClient.getViews viewStat: {}", viewStat);
+//        return 0L;
     }
 }
