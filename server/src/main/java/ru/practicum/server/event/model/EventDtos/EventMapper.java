@@ -81,6 +81,13 @@ public class EventMapper {
                 .build();
     }
 
+    public static EventDtoForComment toDtoForComment(Event event) {
+        return EventDtoForComment.builder()
+                .id(event.getEventId())
+                .title(event.getTitle())
+                .build();
+    }
+
     public static List<EventFullDto> toFullDtoList(List<Event> userEvents, EventClient eventClient) {
         return userEvents.stream().map((Event event) -> toFullDto(event, eventClient)).collect(Collectors.toList());
     }

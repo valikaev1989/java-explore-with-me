@@ -1,7 +1,10 @@
 package ru.practicum.server.event.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.Formula;
 import ru.practicum.server.category.model.Category;
+import ru.practicum.server.comment.models.Comment;
 import ru.practicum.server.location.models.Location;
 import ru.practicum.server.user.models.User;
 import ru.practicum.server.utils.State;
@@ -9,6 +12,7 @@ import ru.practicum.server.utils.State;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
