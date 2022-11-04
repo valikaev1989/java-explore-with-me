@@ -97,7 +97,9 @@ public class EventServiceImpl implements EventService {
                 categoryValidator.validateAndReturnCategoryByCategoryId(eventInputDto.getCategory()),
                 LocationMapper.toLocation(locationService.addLocation(eventInputDto.getLocation())),
                 eventInputDto);
-        EventFullDto eventFullDto = EventMapper.toFullDto(eventRepository.save(event), eventClient);
+        eventRepository.save(event);
+        Event event1 = eventValidator.validateAndReturnEventByEventId(event.getEventId());
+        EventFullDto eventFullDto = EventMapper.toFullDto(event1, eventClient);
         log.info("addEvent end: eventFullDto: {}", eventFullDto);
         return eventFullDto;
     }

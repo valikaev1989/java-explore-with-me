@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import ru.practicum.server.category.model.Category;
 import ru.practicum.server.category.model.categoryDtos.CategoryMapper;
 import ru.practicum.server.clientStatistics.EventClient;
+import ru.practicum.server.comment.models.CommentDto;
 import ru.practicum.server.event.model.Event;
 import ru.practicum.server.location.models.Location;
 import ru.practicum.server.location.models.LocationDtos.LocationMapper;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ru.practicum.server.comment.models.CommentMapper.commentDtoList;
 import static ru.practicum.server.utils.FormatDate.FORMATTER;
 
 @RequiredArgsConstructor
@@ -40,6 +42,7 @@ public class EventMapper {
                 .title(eventInputDto.getTitle())
                 .state(State.valueOf(eventInputDto.getState()))
                 .views(0)
+                .comments(List.of())
                 .build();
     }
 
@@ -60,6 +63,7 @@ public class EventMapper {
                 .state(event.getState())
                 .title(event.getTitle())
                 .views(eventClient.getViews(event.getEventId()))
+                .commentDtoList(commentDtoList(event.getComments()))
                 .build();
         if (event.getPublishedOn() != null) {
             eventFullDto.setPublishedOn(event.getPublishedOn().format(FORMATTER));

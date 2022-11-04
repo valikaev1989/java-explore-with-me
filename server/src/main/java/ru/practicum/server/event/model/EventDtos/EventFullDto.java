@@ -35,5 +35,5 @@ public class EventFullDto {
     private State state;
     private String title;
     private Long views;
-    private List<CommentDto> commentDtoList = new ArrayList<>();
+    private List<CommentDto> commentDtoList;
 }

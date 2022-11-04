@@ -51,9 +51,24 @@ public class EventClient extends BaseClient {
         List<ViewStats> viewStatsList = response.hasBody() ? (List<ViewStats>) response.getBody() : List.of();
         log.info("viewStatsList: {}", viewStatsList);
         return viewStatsList != null && !viewStatsList.isEmpty() ? viewStatsList.get(0).getHits() : 0L;
+
 //        List<Object> viewStatsList = response.hasBody() ? (List<Object>) response.getBody() : List.of();
 //        ViewStats viewStat = (ViewStats) (viewStatsList != null ? viewStatsList.get(0) : null);
 //        log.info("EventClient.getViews viewStat: {}", viewStat);
 //        return 0L;
+
+//                String responseString = Objects.requireNonNull(response.getBody()).toString().replace('/', '|');
+//        Collection<ViewStats> viewStats = new ArrayList<>();
+//
+//        StringBuilder sb = new StringBuilder(responseString);
+//        if (sb.length() > 2) {
+//            sb.delete(sb.length() - 2, sb.length());
+//            sb.deleteCharAt(0);
+//            String[] arr = sb.toString().split("}, ");
+//            for (String a : arr) {
+//                viewStats.add(gson.fromJson(a + "}", ViewStats.class));
+//            }
+//        }
+//        viewStats.forEach(vs -> vs.setUri(vs.getUri().replace('|', '/')));
     }
 }

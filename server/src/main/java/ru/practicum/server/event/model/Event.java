@@ -1,8 +1,6 @@
 package ru.practicum.server.event.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-import org.hibernate.annotations.Formula;
 import ru.practicum.server.category.model.Category;
 import ru.practicum.server.comment.models.Comment;
 import ru.practicum.server.location.models.Location;
@@ -61,4 +59,7 @@ public class Event {
     @Column(name = "title", nullable = false)
     private String title;
     private Integer views = 0;
+    @OneToMany(cascade = CascadeType.MERGE, orphanRemoval = true, mappedBy = "event")
+    @ToString.Exclude
+    private List<Comment> comments;
 }

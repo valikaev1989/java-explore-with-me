@@ -19,14 +19,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Comment {
     @Id
+    @Column(name = "comment_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
     @Column(name = "text", nullable = false, length = 5000)
     private String text;
-    @ManyToOne
-    @JoinColumn(name = "event_event_id", nullable = false)
+    @ManyToOne()
+    @JoinColumn(name = "event_event_id", referencedColumnName = "event_id", nullable = false)
     private Event event;
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "author_user_id", nullable = false)
     private User author;
     @Column(name = "created_on", nullable = false)
