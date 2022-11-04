@@ -2,7 +2,6 @@ package ru.practicum.server.comment.services;
 
 import ru.practicum.server.comment.models.CommentDto;
 import ru.practicum.server.comment.models.CommentInputDto;
-import ru.practicum.server.event.model.EventDtos.EventInputDto;
 
 import java.util.List;
 
@@ -26,4 +25,12 @@ public interface CommentService {
     void disableUserCommenting(Long userId, String timeBlock);
 
     void enableUserCommenting(Long userId);
+
+    CommentDto getCommentForAdmin(Long commentId);
+
+    List<CommentDto> getCommentsForAdminByUserId(Long userId);
+
+    List<CommentDto> getCommentsForAdminInEvent(Long eventId);
+
+    List<CommentDto> getCommentsForAdminInEventByUserId(Long userId, Long eventId);
 }

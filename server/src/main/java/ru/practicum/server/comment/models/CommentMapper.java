@@ -25,11 +25,12 @@ public class CommentMapper {
 
     public static CommentDto toCommentDto(Comment comment) {
         return CommentDto.builder()
-                .commentId(comment.getCommentId())
+                .id(comment.getCommentId())
                 .author(toDto(comment.getAuthor()))
                 .event(toDtoForComment(comment.getEvent()))
                 .text(comment.getText())
                 .createdOn(comment.getCreatedOn().format(FORMATTER))
+                .editedOn(comment.getEditedOn() != null ? comment.getEditedOn().format(FORMATTER) : "null")
                 .commentStatus(comment.getCommentStatus().name())
                 .build();
     }

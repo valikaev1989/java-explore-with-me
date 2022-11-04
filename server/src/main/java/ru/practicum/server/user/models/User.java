@@ -29,6 +29,6 @@ public class User {
     @NotBlank
     private String email;
     @Column(name = "permission_to_comment")
-    private Boolean permissionToComment = true;
+    private Boolean permissionToComment;
     private LocalDateTime blockComments;
 }

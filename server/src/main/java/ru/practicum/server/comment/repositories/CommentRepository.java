@@ -15,5 +15,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> getAllByAuthor_UserId(Long userId);
 
     @Query("select c from Comment c where c.author.userId = ?1 and c.event.eventId = ?2")
-    List<Comment> getAllByAuthor_UserIdAndAndEvent_EventId(Long userId,Long eventId);
+    List<Comment> getAllByAuthor_UserIdAndAndEvent_EventId(Long userId, Long eventId);
+
+    @Query("select c from Comment c where c.author.userId = ?1 and c.commentId = ?2")
+    Comment getCommentByAuthor_UserIdAndAndCommentId(Long userId, Long commentId);
 }

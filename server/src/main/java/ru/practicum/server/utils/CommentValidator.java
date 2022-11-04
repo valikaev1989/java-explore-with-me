@@ -15,8 +15,6 @@ import java.time.LocalDateTime;
 @Component
 @RequiredArgsConstructor
 public class CommentValidator {
-    private final UserValidator userValidator;
-    private final EventValidator eventValidator;
     private final CommentRepository commentRepository;
 
     public Comment validateAndReturnCommentByCommentId(Long commentId) {
@@ -26,6 +24,7 @@ public class CommentValidator {
 
     public void validateOwnComment(Long userId, Comment comment) {
         if (!comment.getAuthor().getUserId().equals(userId)) {
+            log.info("пользователь с id: {}, не владелец комментария с id: {}", userId, comment.getCommentId());
             throw new AccessException(String.format("пользователь с id: '%d', не владелец комментария с id: '%d'",
                     userId, comment.getCommentId()));
         }
@@ -33,12 +32,29 @@ public class CommentValidator {
 
     public void validateDisableCommentingByUser(User user) {
         if (!user.getPermissionToComment()) {
-            throw new AccessException(String.format("пользователю с id: '%d' запрещено комментировать события",
-                    user.getUserId()));
+            log.info("пользователю с id: {} запрещено комментировать " +
+                    "и изменять комментарии события", user.getUserId());
+            throw new AccessException(String.format("пользователю с id: '%d' запрещено комментировать " +
+                    "и изменять комментарии события", user.getUserId()));
         }
-        if (user.getBlockComments().isAfter(LocalDateTime.now()) & user.getBlockComments() != null) {
-            throw new AccessException(String.format("пользователю с id: '%d' запрещено комментировать события до:" +
-                            " %d-%d-%d %d:%d:%d",
+        if (user.getBlockComments() != null) {
+            validateBlockComments(user);
+        }
+    }
+
+    public void validateAccessEditComment(Comment comment) {
+        if (comment.getCommentStatus() == CommentStatus.EditedByAdmin) {
+            throw new AccessException(String.format("комментарий с id: '%d' запрещено редактировать" +
+                    " пользователю с id: '%d'", comment.getCommentId(), comment.getAuthor().getUserId()));
+        }
+    }
+
+    private void validateBlockComments(User user) {
+        if (user.getBlockComments().isAfter(LocalDateTime.now())) {
+            log.info("пользователю с id: {} запрещено комментировать и изменять комментарии события до:" + " {}",
+                    user.getUserId(), user.getBlockComments());
+            throw new AccessException(String.format("пользователю с id: '%d' запрещено комментировать " +
+                            "и изменять комментарии события до:" + " %d-%d-%d %d:%d:%d",
                     user.getUserId(),
                     user.getBlockComments().getYear(),
                     user.getBlockComments().getMonthValue(),
