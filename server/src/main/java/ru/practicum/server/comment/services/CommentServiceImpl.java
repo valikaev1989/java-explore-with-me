@@ -63,7 +63,7 @@ public class CommentServiceImpl implements CommentService {
         log.info("addComment start: userId: {}, eventId:{} , commentInputDto:{}", userId, eventId, commentInputDto);
         User user = getUserAfterCheckBlockParameters(userId);
         Event event = eventValidator.validateAndReturnEventByEventId(eventId);
-        eventValidator.validateForStatusPublished(event);
+        eventValidator.validateForNotStatusPublished(event);
         Comment comment = toComment(commentInputDto, user, event);
         CommentDto commentDto = toCommentDto(commentRepository.save(comment));
         log.info("addComment end: commentDto: {}", commentDto);
