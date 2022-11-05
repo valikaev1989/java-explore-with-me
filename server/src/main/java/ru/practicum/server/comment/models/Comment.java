@@ -1,9 +1,6 @@
 package ru.practicum.server.comment.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.server.event.model.Event;
 import ru.practicum.server.user.models.User;
 import ru.practicum.server.utils.CommentStatus;
@@ -11,7 +8,10 @@ import ru.practicum.server.utils.CommentStatus;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 @Table(name = "comments")
 @Builder(toBuilder = true)
