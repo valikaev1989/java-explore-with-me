@@ -19,7 +19,7 @@ public class CommentMapper {
                 .author(user)
                 .event(event)
                 .createdOn(LocalDateTime.now())
-                .commentStatus(CommentStatus.NotEdited)
+                .commentStatus(CommentStatus.NOT_EDITED)
                 .build();
     }
 

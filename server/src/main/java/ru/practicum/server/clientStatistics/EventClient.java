@@ -21,7 +21,6 @@ import static ru.practicum.server.utils.FormatDate.FORMATTER;
 @Slf4j
 @Service
 public class EventClient extends BaseClient {
-    private final Gson gson;
 
     @Autowired
     public EventClient(@Value("${STAT-SERVER-URL}") String serverUrl, RestTemplateBuilder builder, Gson gson) {
@@ -29,7 +28,6 @@ public class EventClient extends BaseClient {
                 .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
                 .requestFactory(HttpComponentsClientHttpRequestFactory::new)
                 .build());
-        this.gson = gson;
     }
 
     public void postStats(EndpointDto endpointDto) {

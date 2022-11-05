@@ -43,7 +43,7 @@ public class CommentValidator {
     }
 
     public void validateAccessEditComment(Comment comment) {
-        if (comment.getCommentStatus() == CommentStatus.EditedByAdmin) {
+        if (comment.getCommentStatus() == CommentStatus.EDITED_BY_ADMIN) {
             throw new AccessException(String.format("комментарий с id: '%d' запрещено редактировать" +
                     " пользователю с id: '%d'", comment.getCommentId(), comment.getAuthor().getUserId()));
         }

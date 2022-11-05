@@ -632,7 +632,7 @@
 											"    pm.expect(target.event.id).equal(1);\r",
 											"    pm.expect(target.author.id).equal(1);\r",
 											"    pm.expect(target.createdOn).to.eql(pm.environment.get('createdOn')).toString;\r",
-											"    pm.expect(target.commentStatus).equal(\"NotEdited\");\r",
+											"    pm.expect(target.commentStatus).equal(\"NOT_EDITED\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -720,7 +720,7 @@
 											"    pm.expect(target.id).equal(1);\r",
 											"    pm.expect(target.event.id).equal(1);\r",
 											"    pm.expect(target.author.id).equal(1);\r",
-											"    pm.expect(target.commentStatus).equal(\"NotEdited\");\r",
+											"    pm.expect(target.commentStatus).equal(\"NOT_EDITED\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -957,7 +957,7 @@
 											"    pm.expect(target.event.id).equal(1);\r",
 											"    pm.expect(target.author.id).equal(1);\r",
 											"    pm.expect(target.createdOn).to.eql(pm.environment.get('createdOn')).toString;\r",
-											"    pm.expect(target.commentStatus).equal(\"NotEdited\");\r",
+											"    pm.expect(target.commentStatus).equal(\"NOT_EDITED\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -1047,7 +1047,7 @@
 											"    pm.expect(target.id).equal(1);\r",
 											"    pm.expect(target.event.id).equal(1);\r",
 											"    pm.expect(target.author.id).equal(1);\r",
-											"    pm.expect(target.commentStatus).equal(\"NotEdited\");\r",
+											"    pm.expect(target.commentStatus).equal(\"NOT_EDITED\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -1216,7 +1216,7 @@
 											"    pm.expect(target.event.id).equal(2);\r",
 											"    pm.expect(target.author.id).equal(1);\r",
 											"    pm.expect(target.createdOn).to.eql(pm.environment.get('createdOn')).toString;\r",
-											"    pm.expect(target.commentStatus).equal(\"NotEdited\");\r",
+											"    pm.expect(target.commentStatus).equal(\"NOT_EDITED\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -1305,7 +1305,7 @@
 											"    pm.expect(jsonData.length, 'bookings count in total').to.eql(3);\r",
 											"    pm.expect(target.id).equal(1);\r",
 											"    pm.expect(target.author.id).equal(1);\r",
-											"    pm.expect(target.commentStatus).equal(\"NotEdited\");\r",
+											"    pm.expect(target.commentStatus).equal(\"NOT_EDITED\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -1530,7 +1530,7 @@
 											"    pm.expect(target.event.id).equal(1);\r",
 											"    pm.expect(target.author.id).equal(1);\r",
 											"    pm.expect(target.editedOn).to.eql(pm.environment.get('editedOn')).toString;\r",
-											"    pm.expect(target.commentStatus).equal(\"EditedByUser\");\r",
+											"    pm.expect(target.commentStatus).equal(\"EDITED_BY_USER\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -1762,7 +1762,7 @@
 											"    pm.expect(target.event.id).equal(1);\r",
 											"    pm.expect(target.author.id).equal(1);\r",
 											"    pm.expect(target.editedOn).to.eql(pm.environment.get('editedOn')).toString;\r",
-											"    pm.expect(target.commentStatus).equal(\"EditedByAdmin\");\r",
+											"    pm.expect(target.commentStatus).equal(\"EDITED_BY_ADMIN\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -1979,7 +1979,7 @@
 											"    pm.expect(target.id).equal(2);\r",
 											"    pm.expect(target.event.id).equal(1);\r",
 											"    pm.expect(target.author.id).equal(1);\r",
-											"    pm.expect(target.commentStatus).equal(\"EditedByAdmin\");\r",
+											"    pm.expect(target.commentStatus).equal(\"EDITED_BY_ADMIN\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -2138,7 +2138,7 @@
 											"    pm.expect(target.event.id).equal(1);\r",
 											"    pm.expect(target.author.id).equal(2);\r",
 											"    pm.expect(target.createdOn).to.eql(pm.environment.get('createdOn')).toString;\r",
-											"    pm.expect(target.commentStatus).equal(\"NotEdited\");\r",
+											"    pm.expect(target.commentStatus).equal(\"NOT_EDITED\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -2557,7 +2557,7 @@
 											"    pm.expect(target.event.id).equal(1);\r",
 											"    pm.expect(target.author.id).equal(2);\r",
 											"    pm.expect(target.editedOn).to.eql(pm.environment.get('editedOn')).toString;\r",
-											"    pm.expect(target.commentStatus).equal(\"EditedByUser\");\r",
+											"    pm.expect(target.commentStatus).equal(\"EDITED_BY_USER\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -2856,7 +2856,7 @@
 											"    pm.expect(target.event.id).equal(1);\r",
 											"    pm.expect(target.author.id).equal(2);\r",
 											"    pm.expect(target.editedOn).to.eql(pm.environment.get('editedOn')).toString;\r",
-											"    pm.expect(target.commentStatus).equal(\"EditedByUser\");\r",
+											"    pm.expect(target.commentStatus).equal(\"EDITED_BY_USER\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -3092,7 +3092,7 @@
 											"    pm.expect(target.event.id).equal(1);\r",
 											"    pm.expect(target.author.id).equal(2);\r",
 											"    pm.expect(target.editedOn).to.eql(pm.environment.get('editedOn')).toString;\r",
-											"    pm.expect(target.commentStatus).equal(\"EditedByUser\");\r",
+											"    pm.expect(target.commentStatus).equal(\"EDITED_BY_USER\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -3524,7 +3524,7 @@
 											"    pm.expect(target.event.id).equal(1);\r",
 											"    pm.expect(target.author.id).equal(2);\r",
 											"    pm.expect(target.createdOn).to.eql(pm.environment.get('createdOn')).toString;\r",
-											"    pm.expect(target.commentStatus).equal(\"NotEdited\");\r",
+											"    pm.expect(target.commentStatus).equal(\"NOT_EDITED\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -3801,11 +3801,11 @@
 									"    pm.expect(jsonData[0].id, 'result[0]: \"id\" field').equal(2);\r",
 									"    pm.expect(jsonData[0].event.id, 'result[0]: \"event.id\" field').equal(1);\r",
 									"    pm.expect(jsonData[0].author.id, 'result[0]: \"author.id\" field').equal(1);\r",
-									"    pm.expect(jsonData[0].commentStatus, 'result[0]: \"commentStatus\" field').equal(\"EditedByAdmin\");\r",
+									"    pm.expect(jsonData[0].commentStatus, 'result[0]: \"commentStatus\" field').equal(\"EDITED_BY_ADMIN\");\r",
 									"    pm.expect(jsonData[1].id, 'result[0]: \"id\" field').equal(5);\r",
 									"    pm.expect(jsonData[1].event.id, 'result[0]: \"event.id\" field').equal(1);\r",
 									"    pm.expect(jsonData[1].author.id, 'result[0]: \"author.id\" field').equal(2);\r",
-									"    pm.expect(jsonData[1].commentStatus, 'result[0]: \"commentStatus\" field').equal(\"NotEdited\");\r",
+									"    pm.expect(jsonData[1].commentStatus, 'result[0]: \"commentStatus\" field').equal(\"NOT_EDITED\");\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -3834,21 +3834,15 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "{{baseUrl}}/users/:userId/events/:eventId",
+							"raw": "{{baseUrl}}/events/:eventId",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"users",
-								":userId",
 								"events",
 								":eventId"
 							],
 							"variable": [
-								{
-									"key": "userId",
-									"value": "1"
-								},
 								{
 									"key": "eventId",
 									"value": "1"

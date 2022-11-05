@@ -33,33 +33,10 @@ public class ErrorHandler {
                 .build();
     }
 
-    @ExceptionHandler({ValidationException.class})
+    @ExceptionHandler(value = {
+            ValidationException.class, ConstraintViolationException.class, MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse badRequest1(ValidationException e) {
-        return ErrorResponse.builder()
-                .errors(List.of())
-                .message(e.getLocalizedMessage())
-                .status(String.valueOf(HttpStatus.BAD_REQUEST))
-                .reason("For the requested operation the conditions are not met")
-                .timestamp(LocalDateTime.now().format(FORMATTER))
-                .build();
-    }
-
-    @ExceptionHandler({ConstraintViolationException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse badRequest2(ConstraintViolationException e) {
-        return ErrorResponse.builder()
-                .errors(List.of())
-                .message(e.getLocalizedMessage())
-                .status(String.valueOf(HttpStatus.BAD_REQUEST))
-                .reason("For the requested operation the conditions are not met")
-                .timestamp(LocalDateTime.now().format(FORMATTER))
-                .build();
-    }
-
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse badRequest3(MethodArgumentNotValidException e) {
+    public ErrorResponse handleBadRequestException(final Throwable e) {
         return ErrorResponse.builder()
                 .errors(List.of())
                 .message(e.getLocalizedMessage())
@@ -71,7 +48,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(ConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse conflict(ConflictException e) {
+    public ErrorResponse handleConflictException(ConflictException e) {
         return ErrorResponse.builder()
                 .errors(List.of())
                 .message(e.getLocalizedMessage())
@@ -83,7 +60,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(AccessException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse access(AccessException e) {
+    public ErrorResponse handleAccessException(AccessException e) {
         return ErrorResponse.builder()
                 .errors(List.of())
                 .message(e.getLocalizedMessage())
@@ -95,7 +72,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse internal(Throwable e) {
+    public ErrorResponse handleInternalException(Throwable e) {
         return ErrorResponse.builder()
                 .errors(List.of())
                 .message(e.getLocalizedMessage())

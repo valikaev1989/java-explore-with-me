@@ -1,7 +1,7 @@
 package ru.practicum.server.utils;
 
 public enum CommentStatus {
-    EditedByAdmin,
-    EditedByUser,
-    NotEdited
+    EDITED_BY_ADMIN,
+    EDITED_BY_USER,
+    NOT_EDITED
 }

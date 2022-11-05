@@ -80,7 +80,7 @@ public class CommentServiceImpl implements CommentService {
         commentValidator.validateAccessEditComment(comment);
         comment.setText(commentInputDto.getText());
         comment.setEditedOn(LocalDateTime.now());
-        comment.setCommentStatus(CommentStatus.EditedByUser);
+        comment.setCommentStatus(CommentStatus.EDITED_BY_USER);
         CommentDto commentDto = toCommentDto(commentRepository.save(comment));
         log.info("editComment end: commentDto: {}", commentDto);
         return commentDto;
@@ -100,7 +100,7 @@ public class CommentServiceImpl implements CommentService {
         log.info("editCommentAdmin start: commentId: {}, commentInputDto: {}", commentId, commentInputDto);
         Comment comment = commentValidator.validateAndReturnCommentByCommentId(commentId);
         comment.setText(commentInputDto.getText());
-        comment.setCommentStatus(CommentStatus.EditedByAdmin);
+        comment.setCommentStatus(CommentStatus.EDITED_BY_ADMIN);
         comment.setEditedOn(LocalDateTime.now());
         CommentDto commentDto = toCommentDto(commentRepository.save(comment));
         log.info("editCommentAdmin end: commentDto: {}", commentDto);
@@ -115,6 +115,12 @@ public class CommentServiceImpl implements CommentService {
         log.info("deleteComment end: ok");
     }
 
+    /**
+     * user.PermissionToComment: блокировка\разрешение возможности пользователю создавать\изменять\удалять
+     * свои комментарии, по умолчанию "true"
+     *
+     * @param timeBlock: временная блокировка комментировать и изменять свои комментарии пользователю
+     */
     @Override
     public void disableUserCommenting(Long userId, String timeBlock) {
         log.info("disableUserCommenting start: userId:{}, timeBlock: {}", userId, timeBlock);
@@ -141,7 +147,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDto getCommentForAdmin(Long commentId) {
         log.info("getCommentForAdmin start: commentId: {}", commentId);
-        commentValidator.validateAndReturnCommentByCommentId(commentId);
         CommentDto commentDto = toCommentDto(commentValidator.validateAndReturnCommentByCommentId(commentId));
         log.info("getCommentForAdmin end: commentDto: {}", commentDto);
         return commentDto;
