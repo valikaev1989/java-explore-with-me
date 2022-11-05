@@ -10,7 +10,6 @@ import ru.practicum.server.location.models.LocationDtos.LocationDto;
 import ru.practicum.server.user.models.userDtos.UserOutputDto;
 import ru.practicum.server.utils.State;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import ru.practicum.server.category.model.Category;
 import ru.practicum.server.category.model.categoryDtos.CategoryMapper;
 import ru.practicum.server.clientStatistics.EventClient;
-import ru.practicum.server.comment.models.CommentDto;
 import ru.practicum.server.event.model.Event;
 import ru.practicum.server.location.models.Location;
 import ru.practicum.server.location.models.LocationDtos.LocationMapper;
