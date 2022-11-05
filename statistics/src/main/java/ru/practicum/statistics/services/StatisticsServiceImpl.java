@@ -14,8 +14,6 @@ import java.util.List;
 
 import static ru.practicum.statistics.models.dto.StatsMapper.toEndpointDto;
 import static ru.practicum.statistics.models.dto.StatsMapper.toEndpointHit;
-import static ru.practicum.statistics.utils.FormatDate.convertRangeEnd;
-import static ru.practicum.statistics.utils.FormatDate.convertRangeStart;
 
 @Slf4j
 @Service
@@ -57,13 +55,6 @@ public class StatisticsServiceImpl implements StatisticsService {
             log.info("statisticsRepository.getStatsByTimeAndUris(start1, end1, uris), viewStats:");
             viewStats.forEach(viewStat -> log.info("viewStat: {}", viewStat));
         }
-//        if (uris.isEmpty()) {
-//            viewStats = (unique ? statisticsRepository.getStatsUniqueByTime(start1, end1)
-//                    : statisticsRepository.getAllStatsByTime(start1, end1));
-//        } else {
-//            viewStats = (unique ? statisticsRepository.getStatsUniqueByTimeAndUris(start1, end1, uris)
-//                    : statisticsRepository.getStatsByTimeAndUris(start1, end1, uris));
-//        }
         log.info("StatisticsServiceImpl.getViewStats end: viewStatsList: {}", viewStats);
         return viewStats;
     }
