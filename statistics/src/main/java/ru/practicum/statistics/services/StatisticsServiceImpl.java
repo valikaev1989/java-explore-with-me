@@ -34,26 +34,13 @@ public class StatisticsServiceImpl implements StatisticsService {
     public List<ViewStats> getViewStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         log.info("StatisticsServiceImpl.getViewStats: start: {}, end: {},uris: {}, unique: {}",
                 start, end, uris, unique);
-        List<ViewStats> viewStats = new ArrayList<>();
-        if (uris.isEmpty() & unique) {
-            viewStats = statisticsRepository.getStatsUniqueByTime(start, end);
-            log.info("statisticsRepository.getStatsUniqueByTime(start1, end1), viewStats:");
-            viewStats.forEach(viewStat -> log.info("viewStat: {}", viewStat));
-        }
-        if (uris.isEmpty() & !unique) {
-            viewStats = statisticsRepository.getAllStatsByTime(start, end);
-            log.info("statisticsRepository.getAllStatsByTime(start1, end1), viewStats:");
-            viewStats.forEach(viewStat -> log.info("viewStat: {}", viewStat));
-        }
-        if (!uris.isEmpty() & unique) {
-            viewStats = statisticsRepository.getStatsUniqueByTimeAndUris(start, end, uris);
-            log.info("statisticsRepository.getStatsUniqueByTimeAndUris(start1, end1, uris), viewStats:");
-            viewStats.forEach(viewStat -> log.info("viewStat: {}", viewStat));
-        }
-        if (!uris.isEmpty() & !unique) {
-            viewStats = statisticsRepository.getStatsByTimeAndUris(start, end, uris);
-            log.info("statisticsRepository.getStatsByTimeAndUris(start1, end1, uris), viewStats:");
-            viewStats.forEach(viewStat -> log.info("viewStat: {}", viewStat));
+        List<ViewStats> viewStats;
+        if (uris.isEmpty()) {
+            viewStats = (unique ? statisticsRepository.getStatsUniqueByTime(start, end)
+                    : statisticsRepository.getAllStatsByTime(start, end));
+        } else {
+            viewStats = (unique ? statisticsRepository.getStatsUniqueByTimeAndUris(start, end, uris)
+                    : statisticsRepository.getStatsByTimeAndUris(start, end, uris));
         }
         log.info("StatisticsServiceImpl.getViewStats end: viewStatsList: {}", viewStats);
         return viewStats;
