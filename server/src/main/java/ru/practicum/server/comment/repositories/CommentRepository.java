@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    @Query("select c from Comment c where c.event.eventId = ?1")
+    @Query("select c from Comment c where c.event.eventId = ?1 group by c.commentId")
     List<Comment> getAllByEvent_EventId(Long eventId);
 
-    @Query("select c from Comment c where c.author.userId = ?1")
+    @Query("select c from Comment c where c.author.userId = ?1 group by c.commentId")
     List<Comment> getAllByAuthor_UserId(Long userId);
 
-    @Query("select c from Comment c where c.author.userId = ?1 and c.event.eventId = ?2")
+    @Query("select c from Comment c where c.author.userId = ?1 and c.event.eventId = ?2 group by c.commentId")
     List<Comment> getAllByAuthor_UserIdAndAndEvent_EventId(Long userId, Long eventId);
 
     @Query("select c from Comment c where c.author.userId = ?1 and c.commentId = ?2")

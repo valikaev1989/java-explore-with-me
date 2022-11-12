@@ -24,7 +24,7 @@ public class CategoryValidator {
     public List<Long> getCorrectCategoryIdList(List<Long> ids) {
         log.info("Validation.getCorrectCategoryIdList start: ids: {}", ids);
         List<Long> categoryIds = new ArrayList<>();
-        if (!ids.isEmpty()) {
+        if (ids != null && !ids.isEmpty()) {
             for (Long id : ids) {
                 try {
                     Category category = validateAndReturnCategoryByCategoryId(id);
