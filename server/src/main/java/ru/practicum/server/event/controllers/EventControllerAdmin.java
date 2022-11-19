@@ -10,7 +10,6 @@ import ru.practicum.server.event.services.EventService;
 
 import javax.validation.constraints.Min;
 import java.util.List;
-import java.util.Map;
 
 import static ru.practicum.server.utils.FormatDate.convertRangeEnd;
 import static ru.practicum.server.utils.FormatDate.convertRangeStart;
