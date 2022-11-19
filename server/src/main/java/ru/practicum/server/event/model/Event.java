@@ -2,6 +2,7 @@ package ru.practicum.server.event.model;
 
 import lombok.*;
 import ru.practicum.server.category.model.Category;
+import ru.practicum.server.comment.models.Comment;
 import ru.practicum.server.location.models.Location;
 import ru.practicum.server.user.models.User;
 import ru.practicum.server.utils.State;
@@ -9,6 +10,7 @@ import ru.practicum.server.utils.State;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -57,4 +59,7 @@ public class Event {
     @Column(name = "title", nullable = false)
     private String title;
     private Integer views = 0;
+    @OneToMany(cascade = CascadeType.MERGE, orphanRemoval = true, mappedBy = "event")
+    @ToString.Exclude
+    private List<Comment> comments;
 }

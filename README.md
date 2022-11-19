@@ -47,6 +47,7 @@
     * Запросы на получение заявок на участие в событии владельцем события
     * Запросы на отмену заявки на участие в событии пользователем
     * Запросы на отклонении и подтверждение заявок на участие в событии владельцем события
+    * Запросы на создание\изменение\удаление\получение комментариев
 * #### Административный:
     * Запросы на создание\изменение\удаление категорий
     * Запросы на создание\удаление пользователей
@@ -55,6 +56,8 @@
     * Запросы на подтверждение\отклонение\изменение событий пользователей
     * Запросы на получение событий по заданным параметрам
     * Запросы на получение статистики по количеству публичных запросов
+    * Запросы на изменение\удаление\получение\блокировку комментариев
+    * Запросы на блокировку возможности создавать\редактировать комментарии к событиям пользователям
 
 3. ### У статистической части приложения задача сбора информации по публичным запросам пользователей
 
@@ -98,8 +101,9 @@
         * server.port = 8080
     4) Запустить сервис EWM-statistics
         * server.port = 9090
-3. Для запуска проекта потребуется docker и docker-compose.
-4. Команда "docker-compose up" запускает оба сервиса с их бд
-5. Для проверки работоспособности приложения предусмотрены тесты для приложения постман:  
-   [ewm-service](https://github.com/valikaev1989/java-explore-with-me/blob/develop/postmanTests/ewm-main-service.json)  
-   [ewm-statistic](https://github.com/valikaev1989/java-explore-with-me/blob/develop/postmanTests/ewm-stat-service.json)
+2. Для запуска проекта потребуется docker и docker-compose.
+3. Команда "docker-compose up" запускает оба сервиса с их бд
+4. Для проверки работоспособности приложения предусмотрены тесты для приложения постман:
+    - [ewm-service](https://github.com/valikaev1989/java-explore-with-me/blob/develop/postmanTests/ewm-main-service.json)
+    - [ewm-statistic](https://github.com/valikaev1989/java-explore-with-me/blob/develop/postmanTests/ewm-stat-service.json)
+    - [ewm-service-comments](https://github.com/valikaev1989/java-explore-with-me/blob/feature/postmanTests/Comments%20EWM.postman_collection.json)

@@ -9,6 +9,9 @@ import ru.practicum.statistics.services.StatisticsService;
 
 import java.util.List;
 
+import static ru.practicum.statistics.utils.FormatDate.convertRangeEnd;
+import static ru.practicum.statistics.utils.FormatDate.convertRangeStart;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -30,6 +33,6 @@ public class StatisticsController {
             @RequestParam(value = "unique", required = false, defaultValue = "false") Boolean unique) {
         log.info("StatisticsController.getViewStats:start: {}, end: {},uris: {}, unique: {}",
                 start, end, uris, unique);
-        return statisticsService.getViewStats(start, end, uris, unique);
+        return statisticsService.getViewStats(convertRangeStart(start), convertRangeEnd(end), uris, unique);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.test.annotation.DirtiesContext;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class ServerApplicationTests {
+
     @Test
     void contextLoads() {
     }

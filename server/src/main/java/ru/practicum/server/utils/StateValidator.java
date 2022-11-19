@@ -15,11 +15,13 @@ public class StateValidator {
     public List<State> getCorrectStateList(List<String> states) {
         log.info("Validation.getCorrectStateList start: states: {}", states);
         List<State> stateList = new ArrayList<>();
-        for (String state : states) {
-            try {
-                stateList.add(State.valueOf(state));
-            } catch (NotFoundException ex) {
-                log.warn(ex.getMessage());
+        if (states != null && !states.isEmpty()) {
+            for (String state : states) {
+                try {
+                    stateList.add(State.valueOf(state));
+                } catch (NotFoundException ex) {
+                    log.warn(ex.getMessage());
+                }
             }
         }
         log.info("Validation.getCorrectStateList end: stateList: {}", stateList);

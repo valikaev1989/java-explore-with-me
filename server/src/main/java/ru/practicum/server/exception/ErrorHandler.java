@@ -2,6 +2,7 @@ package ru.practicum.server.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -10,6 +11,7 @@ import ru.practicum.server.exception.models.ConflictException;
 import ru.practicum.server.exception.models.NotFoundException;
 import ru.practicum.server.exception.models.ValidationException;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,9 +33,10 @@ public class ErrorHandler {
                 .build();
     }
 
-    @ExceptionHandler(ValidationException.class)
+    @ExceptionHandler(value = {
+            ValidationException.class, ConstraintViolationException.class, MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse badRequest(ValidationException e) {
+    public ErrorResponse handleBadRequestException(final Throwable e) {
         return ErrorResponse.builder()
                 .errors(List.of())
                 .message(e.getLocalizedMessage())
@@ -45,7 +48,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(ConflictException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse conflict(ConflictException e) {
+    public ErrorResponse handleConflictException(ConflictException e) {
         return ErrorResponse.builder()
                 .errors(List.of())
                 .message(e.getLocalizedMessage())
@@ -57,7 +60,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(AccessException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse access(AccessException e) {
+    public ErrorResponse handleAccessException(AccessException e) {
         return ErrorResponse.builder()
                 .errors(List.of())
                 .message(e.getLocalizedMessage())
@@ -69,7 +72,7 @@ public class ErrorHandler {
 
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorResponse internal(Throwable e) {
+    public ErrorResponse handleInternalException(Throwable e) {
         return ErrorResponse.builder()
                 .errors(List.of())
                 .message(e.getLocalizedMessage())

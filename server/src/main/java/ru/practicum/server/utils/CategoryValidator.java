@@ -24,12 +24,14 @@ public class CategoryValidator {
     public List<Long> getCorrectCategoryIdList(List<Long> ids) {
         log.info("Validation.getCorrectCategoryIdList start: ids: {}", ids);
         List<Long> categoryIds = new ArrayList<>();
-        for (Long id : ids) {
-            try {
-                Category category = validateAndReturnCategoryByCategoryId(id);
-                categoryIds.add(category.getCategoryId());
-            } catch (NotFoundException ex) {
-                log.warn(ex.getMessage());
+        if (ids != null && !ids.isEmpty()) {
+            for (Long id : ids) {
+                try {
+                    Category category = validateAndReturnCategoryByCategoryId(id);
+                    categoryIds.add(category.getCategoryId());
+                } catch (NotFoundException ex) {
+                    log.warn(ex.getMessage());
+                }
             }
         }
         log.info("Validation.getCorrectCategoryIdList end: CategoryIds: {}", categoryIds);

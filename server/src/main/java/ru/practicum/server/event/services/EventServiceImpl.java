@@ -7,10 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.server.clientStatistics.EventClient;
 import ru.practicum.server.event.model.Event;
-import ru.practicum.server.event.model.EventDtos.EventFullDto;
-import ru.practicum.server.event.model.EventDtos.EventInputDto;
-import ru.practicum.server.event.model.EventDtos.EventMapper;
-import ru.practicum.server.event.model.EventDtos.EventShortDto;
+import ru.practicum.server.event.model.EventDtos.*;
 import ru.practicum.server.utils.*;
 import ru.practicum.server.event.repositories.EventRepository;
 import ru.practicum.server.exception.models.ValidationException;
@@ -42,15 +39,17 @@ public class EventServiceImpl implements EventService {
     private final StateValidator stateValidator;
 
     @Override
-    public List<EventFullDto> getEventsByFilterForAdmin(Map<String, Object> filter) {
-        log.info("getEventsByFilterForAdmin start: filter:");
-        filter.forEach((key, value) -> log.info("{}:{}", key, value));
-        List<Long> userIds = userValidator.getCorrectUserIdList((List<Long>) filter.get("users"));
-        List<State> states = stateValidator.getCorrectStateList((List<String>) filter.get("states"));
-        List<Long> categoryIds = categoryValidator.getCorrectCategoryIdList((List<Long>) filter.get("categories"));
-        LocalDateTime rangeStart = convertRangeStart(filter.get("rangeStart"));
-        LocalDateTime rangeEnd = convertRangeEnd(filter.get("rangeEnd"));
-        Pageable pageable = getPage((Integer) filter.get("from"), (Integer) filter.get("size"));
+    public List<EventFullDto> getEventsByFilterForAdmin(AdminParamsDto paramsDto) {
+        log.info("getEventsByFilterForAdmin start: paramsDto: {}", paramsDto);
+        List<Long> userIds = (paramsDto.getUserIds() != null ?
+                userValidator.getCorrectUserIdList(paramsDto.getUserIds()) : null);
+        List<State> states = (paramsDto.getStates() != null ?
+                stateValidator.getCorrectStateList(paramsDto.getStates()) : null);
+        List<Long> categoryIds = (paramsDto.getCategoryIds() != null ?
+                categoryValidator.getCorrectCategoryIdList(paramsDto.getCategoryIds()) : null);
+        LocalDateTime rangeStart = paramsDto.getRangeStart();
+        LocalDateTime rangeEnd = paramsDto.getRangeEnd();
+        Pageable pageable = paramsDto.getPageable();
         List<EventFullDto> eventFullDtoList = EventMapper.toFullDtoList(eventRepository
                 .getAllEventsByParametersForAdmin(
                         userIds, categoryIds, states, rangeStart, rangeEnd, pageable), eventClient);
@@ -97,7 +96,9 @@ public class EventServiceImpl implements EventService {
                 categoryValidator.validateAndReturnCategoryByCategoryId(eventInputDto.getCategory()),
                 LocationMapper.toLocation(locationService.addLocation(eventInputDto.getLocation())),
                 eventInputDto);
-        EventFullDto eventFullDto = EventMapper.toFullDto(eventRepository.save(event), eventClient);
+        eventRepository.save(event);
+        Event event1 = eventValidator.validateAndReturnEventByEventId(event.getEventId());
+        EventFullDto eventFullDto = EventMapper.toFullDto(event1, eventClient);
         log.info("addEvent end: eventFullDto: {}", eventFullDto);
         return eventFullDto;
     }

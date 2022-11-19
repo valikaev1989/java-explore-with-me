@@ -24,12 +24,14 @@ public class UserValidator {
     public List<Long> getCorrectUserIdList(List<Long> ids) {
         log.info("Validation.getCorrectUserIdList start: ids: {}", ids);
         List<Long> userIds = new ArrayList<>();
-        for (Long id : ids) {
-            try {
-                User user = validateAndReturnUserByUserId(id);
-                userIds.add(user.getUserId());
-            } catch (NotFoundException ex) {
-                log.warn(ex.getMessage());
+        if (ids != null && !ids.isEmpty()) {
+            for (Long id : ids) {
+                try {
+                    User user = validateAndReturnUserByUserId(id);
+                    userIds.add(user.getUserId());
+                } catch (NotFoundException ex) {
+                    log.warn(ex.getMessage());
+                }
             }
         }
         log.info("Validation.getCorrectUserIdList end: ids: {}", userIds);

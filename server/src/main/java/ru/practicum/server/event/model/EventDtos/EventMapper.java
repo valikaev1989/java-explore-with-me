@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static ru.practicum.server.comment.models.CommentMapper.commentDtoList;
 import static ru.practicum.server.utils.FormatDate.FORMATTER;
 
 @RequiredArgsConstructor
@@ -40,6 +41,7 @@ public class EventMapper {
                 .title(eventInputDto.getTitle())
                 .state(State.valueOf(eventInputDto.getState()))
                 .views(0)
+                .comments(List.of())
                 .build();
     }
 
@@ -60,6 +62,7 @@ public class EventMapper {
                 .state(event.getState())
                 .title(event.getTitle())
                 .views(eventClient.getViews(event.getEventId()))
+                .commentDtoList(commentDtoList(event.getComments()))
                 .build();
         if (event.getPublishedOn() != null) {
             eventFullDto.setPublishedOn(event.getPublishedOn().format(FORMATTER));
@@ -78,6 +81,13 @@ public class EventMapper {
                 .paid(event.getPaid())
                 .title(event.getTitle())
                 .views(eventClient.getViews(event.getEventId()))
+                .build();
+    }
+
+    public static EventDtoForComment toDtoForComment(Event event) {
+        return EventDtoForComment.builder()
+                .id(event.getEventId())
+                .title(event.getTitle())
                 .build();
     }
 

@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -27,4 +28,7 @@ public class User {
     @Email
     @NotBlank
     private String email;
+    @Column(name = "permission_to_comment")
+    private Boolean permissionToComment;
+    private LocalDateTime blockComments;
 }
